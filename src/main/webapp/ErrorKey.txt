@@ -1,0 +1,33 @@
+ErrorKey 说明:
+wechat.accesstoken.is.null - 微信Access Token为空
+we.chat.access.token.is.invalid - 微信Access Token不合法
+no.kline.ticket - KLine Ticket为空
+invalid.kline.ticket - KLine Ticket不合法
+strategy.is.null - 策略名为空
+invalid.strategy - 策略名不合法
+json.no.job - Job名为空
+invalid.job - Job名不合法
+date.is.null - 日期是空
+data.format.invalid - 日期格式不满足 yy-mm-dd
+date.is.in.future - 日期是将来交易日
+market.not.open - 尚未开市
+market.not.close - 尚未闭市
+data.is.processing - 数据处理中
+today.market.rest.for.weekend - 今天是周末休市
+today.market.rest.for.new.year - 今天是新年假期休市
+today.market.rest.for.spring.festival - 今天是春节假期休市
+today.market.rest.for.tomb-sweeping.day - 今天是清明节假期休市
+today.market.rest.for.labour.day - 今天是劳动节假期休市
+today.market.rest.for.dragon.boat.festival - 今天是端午节假期休市
+today.market.rest.for.mid.autumn.festival - 今天是中秋节假期休市
+today.market.rest.for.national.day - 今天是国庆节假期休市
+
+股票返回Field说明:
+Dqj - 当前价(当日收盘价)
+Hsl - 换手率
+Kpj - 开盘价
+Name - 股票名称
+StockId - 股票代码
+Zde - 涨跌额
+Zdf - 涨跌幅 
+Zf - 振幅

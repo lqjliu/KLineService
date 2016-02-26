@@ -1,0 +1,283 @@
+<html>
+
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>
+KLineService APIs Demo
+</title>
+
+</head>
+
+<body>
+	<br />
+	<label for="txt_username" >
+          WebChat Access Token:</label>
+    <input type="text" id="code" value = ""/>  <label for="txt_username" >(Input "invalid" will show invalid access token error message)</label>
+	<br />
+	<input type="button" value="Authentication" id="btn_auth" onclick="auth_click();" />
+	<br />
+	<br />	
+	<br />
+	<div id="request-auth">
+    </div>
+    <br />
+	
+	<div id="posturl-auth">
+    </div>
+    <br />
+
+	<div id="reponse-auth">
+    </div>
+	<br />
+	
+	<label for="txt_username" >
+          KLineTicket:</label>
+    <input type="text" id="KLineTicket" value = ""/>
+    <br />
+
+	
+	<label for="txt_age">
+        Strategy:</label>
+    <!--input type="text" id="strategy" /-->
+<select id = "strategy" onchange="init()">  
+  <option value="MRZT">每日涨停</option>  
+  <option value="LSXG">历史新高</option>  
+  <option value="YZZT">一字涨停</option>  
+  <option value="LXXD">连续下跌</option>  
+  <option value="MN">慢牛</option>  
+  <option value="QSGHTMA5">强势股回调五日线</option>  
+  <option value="QSGHTMA10">强势股回调十日线</option>  
+  <option value="">空策略</option>
+  <option value="InvalidStrategy">不存在策略</option>
+
+</select>  
+	
+	<br />
+
+
+	<label for="txt_username" >
+          Job:</label>
+    <input type="text" id="job" value = "QueryCommonStrategyStock"/>
+    <br />
+    <label for="txt_age">
+        Date:</label>
+    <input type="text" id="date" value = "2014-11-06" />
+	<br />
+	<div id="lsxgAdditionalInfo" style="visibility:hidden;display:none;" >
+		时间跨度天数: <input type="text" id="spanDays" value = "40" />
+		<br />
+		距离上一次最高价的天数范围： 从<input type="text" id="lastPeakRange1" value = "20" />
+		到 <input type="text" id="lastPeakRange2" value = "40" />
+	</div>
+	
+	<div id="lxxdAdditionalInfo" style="visibility:hidden;display:none;" >
+		下跌天数: <input type="text" id="days" value = "5" />
+		<br />
+		最低价： <input type="text" id="lowestPrice" value = "9" />
+		最高价： <input type="text" id="highestPrice" value = "25" />
+	</div>
+
+	
+	<input type="button" value="Query Stocks" id="btn" onclick="btn_click();" />
+	<br />
+	
+	<br />
+	<div id="request">
+    </div>
+    <br />
+	
+	<div id="posturl">
+    </div>
+    <br />
+
+	<div id="reponse">
+    </div>
+<br />
+<br />
+<div>Please click <a href = "http://tool.oschina.net/codeformat/json" target="_blank"> here</a> to format the JSON</div>
+<br><b>ErrorKey 说明:</b></br>
+wechat.accesstoken.is.null - 微信Access Token为空<br/>
+we.chat.access.token.is.invalid - 微信Access Token不合法<br/>
+no.kline.ticket - KLine Ticket为空<br/>
+invalid.kline.ticket - KLine Ticket不合法<br/>
+strategy.is.null - 策略名为空<br/>
+invalid.strategy - 策略名不合法<br/>
+json.no.job - Job名为空<br/>
+invalid.job - Job名不合法<br/>
+date.is.null - 日期是空<br/>
+data.format.invalid - 日期格式不满足 yy-mm-dd<br/>
+date.is.in.future - 日期是将来交易日<br/>
+market.not.open - 尚未开市<br/>
+market.not.close - 尚未闭市<br/>
+data.is.processing - 数据处理中<br/>
+today.market.rest.for.weekend - 今天是周末休市<br/>
+today.market.rest.for.new.year - 今天是新年假期休市<br/>
+today.market.rest.for.spring.festival - 今天是春节假期休市<br/>
+today.market.rest.for.tomb-sweeping.day - 今天是清明节假期休市<br/>
+today.market.rest.for.labour.day - 今天是劳动节假期休市<br/>
+today.market.rest.for.dragon.boat.festival - 今天是端午节假期休市<br/>
+today.market.rest.for.mid.autumn.festival - 今天是中秋节假期休市<br/>
+today.market.rest.for.national.day - 今天是国庆节假期休市<br/>
+system.has.no.data.of.this.day - 对不起,时间太久,系统没有这样的数据<br/>
+
+<br><b>股票返回Field说明:</b></br>
+Dqj - 当前价(当日收盘价)<br/>
+Hsl - 换手率<br/>
+Kpj - 开盘价<br/>
+Name - 股票名称<br/>
+StockId - 股票代码<br/>
+Zde - 涨跌额<br/>
+Zdf - 涨跌幅<br/>
+Zf - 振幅<br/>
+
+</body>
+<script type="text/javascript">
+function init() {
+	if(document.getElementById("strategy").value == "MRZT" || document.getElementById("strategy").value == "InvalidStrategy" || document.getElementById("strategy").value == ""){
+		document.getElementById("job").value = "QueryCommonStrategyStock";
+		hideLSXGAdditionalInfoFields();
+		hideLXXDAdditionalInfoFields();
+	}else if(document.getElementById("strategy").value == "LSXG"){
+		document.getElementById("job").value = "QueryZJXGStrategyStock";
+		showLSXGAdditionalInfoFields();
+		hideLXXDAdditionalInfoFields();
+	}else if(document.getElementById("strategy").value == "LXXD"){
+		document.getElementById("job").value = "QueryLXXDStrategyStock";
+		hideLSXGAdditionalInfoFields();
+		showLXXDAdditionalInfoFields();
+	}else{
+		document.getElementById("job").value = "QueryCommonStrategyStockNeedAuthentication";
+		hideLSXGAdditionalInfoFields();
+		hideLXXDAdditionalInfoFields();
+	}
+}
+
+function showLSXGAdditionalInfoFields(){
+		document.getElementById("lsxgAdditionalInfo").style.visibility = "visible";
+		document.getElementById("lsxgAdditionalInfo").style.display = "";
+}
+
+function hideLSXGAdditionalInfoFields(){
+		document.getElementById("lsxgAdditionalInfo").style.visibility = "hidden";
+		document.getElementById("lsxgAdditionalInfo").style.display = "none";
+}
+
+function showLXXDAdditionalInfoFields(){
+		document.getElementById("lxxdAdditionalInfo").style.visibility = "visible";
+		document.getElementById("lxxdAdditionalInfo").style.display = "";
+}
+
+function hideLXXDAdditionalInfoFields(){
+		document.getElementById("lxxdAdditionalInfo").style.visibility = "hidden";
+		document.getElementById("lxxdAdditionalInfo").style.display = "none";
+}
+
+
+
+
+
+function auth_click() {
+	//获取参数
+    var accessToken = document.getElementById("code").value;
+	
+
+	//设置字符串参数,并进行编码
+    var args = "{\"Rqst\":{\"Job\":\"LoginThroughWeChat\",\"Data\":{\"WechatAccessToken\":\""+accessToken+"\"}}}";
+
+	var json = eval('(' + args + ')');
+	document.getElementById("request-auth").innerHTML = args;
+	
+	var url = window.location.href + "klineservice";
+	document.getElementById("posturl-auth").innerHTML = url;
+
+    //创建XMLHttpRequest对象
+    var xmlHttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+
+    //配置连接及方式
+    //使用post方式不用担心缓存问题
+    xmlHttp.open("post", url, true);
+
+    //设置Content-Type类型为aapplication/x-www-form-urlencoded,以告知服务器实体中有参数
+    xmlHttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+
+    //设置回调函数
+    xmlHttp.onreadystatechange = function () {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+            var response = xmlHttp.responseText;
+			document.getElementById("reponse-auth").innerHTML = response;
+			var json = eval('(' + response + ')');
+			document.getElementById("KLineTicket").value=json.Rsps.KLineTicket;
+        }
+    }
+
+    //发送参数
+    xmlHttp.send(args);
+} 
+
+
+
+function btn_click() {
+	//获取参数
+    var strategy = document.getElementById("strategy").value;
+	var job = document.getElementById("job").value;
+    var date = document.getElementById("date").value;
+    var kLineTicket = document.getElementById("KLineTicket").value;
+
+	//设置字符串参数,并进行编码
+    var args = "{\"Rqst\":{\"Job\":\""+job+"\",\"Data\":{\"Strategy\":\""+strategy+"\",\"Date\":\""+date+"\"}}}";
+
+	if(strategy != "MRZT" && strategy!= "InvalidStrategy" && strategy != ""){
+		args = "{\"Rqst\":{\"Job\":\""+job+"\",\"Data\":{\"Strategy\":\"MRZT\",\"Date\":\""+date+"\"}, \"KLineTicket\":\"" + kLineTicket + "\"}}";
+	}
+
+	if(strategy == "YZZT"){
+		args = "{\"Rqst\":{\"Job\":\""+job+"\",\"Data\":{\"Strategy\":\""+strategy+"\",\"Date\":\""+date+"\"}, \"KLineTicket\":\"" + kLineTicket + "\"}}";
+	}
+
+	if(strategy == "LSXG"){
+	    var spanDays = document.getElementById("spanDays").value;
+		var lastPeakRange1 = document.getElementById("lastPeakRange1").value;
+		var lastPeakRange2 = document.getElementById("lastPeakRange2").value;
+//		args = "{\"Rqst\":{\"Job\":\""+job+"\",\"Data\":{\"Strategy\":\"MRZT\",\"Date\":\""+date+"\"}, \"KLineTicket\":\"" + kLineTicket + "\"}}";
+		
+		args = "{\"Rqst\":{\"Job\":\""+job+"\",\"Data\":{\"Strategy\":\""+strategy+"\",\"Date\":\""+date+"\",\"SpanDays\":\""+spanDays+"\",\"ShortestDaysToLastHighest\":\""+lastPeakRange1+"\",\"LongestDaysToLastHighest\":\""+lastPeakRange2+"\"}, \"KLineTicket\":\"" + kLineTicket + "\"}}";
+	}
+
+	if(strategy == "LXXD"){
+	    var spanDays = document.getElementById("days").value;
+		var lastPeakRange1 = document.getElementById("lowestPrice").value;
+		var lastPeakRange2 = document.getElementById("highestPrice").value;
+//		args = "{\"Rqst\":{\"Job\":\""+job+"\",\"Data\":{\"Strategy\":\"MRZT\",\"Date\":\""+date+"\"}, \"KLineTicket\":\"" + kLineTicket + "\"}}";
+		
+		args = "{\"Rqst\":{\"Job\":\""+job+"\",\"Data\":{\"Strategy\":\""+strategy+"\",\"Date\":\""+date+"\",\"days\":\""+spanDays+"\",\"lowestPrice\":\""+lastPeakRange1+"\",\"highestPrice\":\""+lastPeakRange2+"\"}, \"KLineTicket\":\"" + kLineTicket + "\"}}";
+	}
+
+	
+	var json = eval('(' + args + ')');
+	document.getElementById("request").innerHTML = args;
+	
+	var url = window.location.href + "klineservice";
+	document.getElementById("posturl").innerHTML = url;
+
+    //创建XMLHttpRequest对象
+    var xmlHttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+
+    //配置连接及方式
+    //使用post方式不用担心缓存问题
+    xmlHttp.open("post", url, true);
+
+    //设置Content-Type类型为aapplication/x-www-form-urlencoded,以告知服务器实体中有参数
+    xmlHttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+
+    //设置回调函数
+    xmlHttp.onreadystatechange = function () {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+            document.getElementById("reponse").innerHTML = xmlHttp.responseText;
+        }
+    }
+
+    //发送参数
+    xmlHttp.send(args);
+} 
+</script>
+</html>
