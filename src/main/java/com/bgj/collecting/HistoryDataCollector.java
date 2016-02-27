@@ -159,7 +159,9 @@ public class HistoryDataCollector {
 		String fulldbURL = "jdbc:mysql://"
 				+ "56d1d27f1abfb.sh.cdb.myqcloud.com:4533"
 				+ "/bgj?user=bgj&password=KLine123&useUnicode=true&characterEncoding=UTF-8";
-
+		ConnectionPool.setFULLDBURL(fulldbURL);
+		
+		
 		StockQuotesBean sqb = new StockQuotesBean();
 		sqb.setStockId("600036");
 		sqb.setName("��������");
