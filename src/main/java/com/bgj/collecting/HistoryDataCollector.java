@@ -156,9 +156,13 @@ public class HistoryDataCollector {
 	}
 
 	public static void main(String[] args) {
+		String fulldbURL = "jdbc:mysql://"
+				+ "56d1d27f1abfb.sh.cdb.myqcloud.com:4533"
+				+ "/bgj?user=bgj&password=KLine123&useUnicode=true&characterEncoding=UTF-8";
+
 		StockQuotesBean sqb = new StockQuotesBean();
 		sqb.setStockId("600036");
-		sqb.setName("ÕÐÉÌÒøÐÐ");
+		sqb.setName("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 		sqb.setCjl(5436800);
 		sqb.setHsl(2.64);
 		collectDailyInfo("20150414", "20150415", sqb);
