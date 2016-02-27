@@ -6,7 +6,7 @@
     <servlet-class>com.common.web.KLineServlet</servlet-class>
     <init-param>
         <param-name>DB_URL</param-name>
-        <param-value>kline123.mysql.rds.aliyuncs.com</param-value>
+        <param-value>10.66.137.11</param-value>
     </init-param>
   </servlet>
   <servlet-mapping>
