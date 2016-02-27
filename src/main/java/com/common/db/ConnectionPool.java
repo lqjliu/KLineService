@@ -128,6 +128,7 @@ public class ConnectionPool {
 				db_url = DB_FULL_URL;
 			}
 			
+			System.out.println("db_url = " + db_url);
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			result = DriverManager.getConnection(db_url);
 
