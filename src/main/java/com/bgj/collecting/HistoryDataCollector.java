@@ -156,9 +156,13 @@ public class HistoryDataCollector {
 	}
 
 	public static void main(String[] args) {
+//		String fulldbURL = "jdbc:mysql://"
+//				+ "56d1d27f1abfb.sh.cdb.myqcloud.com:4533"
+//				+ "/bgj?user=bgj&password=KLine123&useUnicode=true&characterEncoding=UTF-8";
 		String fulldbURL = "jdbc:mysql://"
-				+ "56d1d27f1abfb.sh.cdb.myqcloud.com:4533"
+				+ "10.66.137.11:3306"
 				+ "/bgj?user=bgj&password=KLine123&useUnicode=true&characterEncoding=UTF-8";
+
 		ConnectionPool.setFULLDBURL(fulldbURL);
 		
 		
