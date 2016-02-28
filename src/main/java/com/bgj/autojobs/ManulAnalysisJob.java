@@ -79,14 +79,7 @@ public class ManulAnalysisJob implements Runnable {
 					today = DateUtil.getNextDay(today);
 					continue;
 				}
-				EventRecorder.recordEvent(ManulAnalysisJob.class,
-						"Start to collect latest SPJ");
-				StockCurrentPriceHolder.getInstance()
-						.initTodayLatestCurrentPrice();
-				EventRecorder.recordEvent(ManulAnalysisJob.class,
-						"Today price of 000016 = "
-								+ StockCurrentPriceHolder.getInstance()
-										.getLatestSPJ("000016"));
+
 				EventRecorder.recordEvent(ManulAnalysisJob.class,
 						"Start to collect latest SPJ");
 

@@ -74,20 +74,21 @@ public class KLineServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
-		if(req.getParameter("TEST") != null){
+		if (req.getParameter("TEST") != null) {
 			String begin = req.getParameter("BEGIN");
 			String end = req.getParameter("END");
 			logger.info("begin = " + begin);
 			logger.info("end = " + end);
-			if(begin == null || end == null){
+			if (begin == null || end == null) {
 				return;
-			}else{
+			} else {
 				ManulAnalysisJob job = new ManulAnalysisJob(begin, end);
 				Thread t = new Thread(job);
 				t.start();
 			}
+		} else {
+			doPost(req, res);
 		}
-		doPost(req, res);
 	}
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
