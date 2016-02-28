@@ -73,6 +73,9 @@ public class ManulAnalysisJob implements Runnable {
 		Date today = beginDate;
 		try {
 			while (!today.after(endDate)) {
+				EventRecorder.recordEvent(ManulAnalysisJob.class,
+						"Start to analysis " + today + " data");
+
 				if (!StockMarketUtil.isMarketOpen(today)) {
 					EventRecorder.recordEvent(ManulAnalysisJob.class, today
 							+ " Market is closed, so need not analysis data");
@@ -80,11 +83,6 @@ public class ManulAnalysisJob implements Runnable {
 					continue;
 				}
 
-				EventRecorder.recordEvent(ManulAnalysisJob.class,
-						"Start to collect latest SPJ");
-
-				EventRecorder.recordEvent(ManulAnalysisJob.class,
-						"Start to analyse Strategies of " + today);
 
 				EventRecorder.recordEvent(ManulAnalysisJob.class,
 						"Start to analyse MRZT");
@@ -111,9 +109,10 @@ public class ManulAnalysisJob implements Runnable {
 						"Finish to analyse ZJXG");
 
 				EventRecorder.recordEvent(ManulAnalysisJob.class,
-						"Finish to analyse Strategies of " + today);
+						"Finish to analysis " + today + " data");
 
 				today = DateUtil.getNextDay(today);
+
 			}
 		} catch (KLineException e) {
 			logger.error("analyse Strategy of date: " + today + " throw ", e);
