@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,6 +30,8 @@ import com.common.exception.ExceptionKeys;
 public class KLineServlet extends HttpServlet {
 
 	public static final int INPUT_BUF_SIZE = 512;
+	private static Logger logger = Logger.getLogger(KLineServlet.class);
+
 
 	public void init() throws ServletException {
 		super.init();
@@ -74,6 +77,8 @@ public class KLineServlet extends HttpServlet {
 		if(req.getParameter("TEST") != null){
 			String begin = req.getParameter("BEGIN");
 			String end = req.getParameter("END");
+			logger.info("begin = " + begin);
+			logger.info("end = " + end);
 			if(begin == null || end == null){
 				return;
 			}else{
