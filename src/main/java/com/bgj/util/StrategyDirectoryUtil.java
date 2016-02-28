@@ -22,10 +22,6 @@ public class StrategyDirectoryUtil {
 		String strategyDirectoryPath = StrateFilePath.getInstance()
 				.getRootPath()
 				+ OSUtil.getOSSeparator()
-				+ Constants.WEB_INF
-				+ OSUtil.getOSSeparator()
-				+ Constants.CLASSES
-				+ OSUtil.getOSSeparator()
 				+ stategyName
 				+ OSUtil.getOSSeparator() + year;
 

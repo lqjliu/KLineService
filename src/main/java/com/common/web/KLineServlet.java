@@ -1,7 +1,6 @@
 package com.common.web;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
@@ -18,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.bgj.autojobs.BgjAutoQuartzServer;
+import com.bgj.autojobs.ManulAnalysisJob;
 import com.bgj.exception.KLineAppException;
 import com.bgj.util.StrateFilePath;
 import com.common.auth.AuthenticationResultBean;
@@ -34,8 +34,8 @@ public class KLineServlet extends HttpServlet {
 		super.init();
 		String db_url = this.getServletConfig().getInitParameter("DB_URL");
 		ConnectionPool.setDBURL(db_url);
-		StrateFilePath.getInstance().setRootPath(
-				getServletContext().getRealPath("/"));
+		String stockPath = this.getServletConfig().getInitParameter("Stock_Info");
+		StrateFilePath.getInstance().setRootPath(stockPath);
 		BgjAutoQuartzServer.getInstance().startJob();
 	}
 
@@ -71,6 +71,17 @@ public class KLineServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
+		if(req.getParameter("TEST") != null){
+			String begin = req.getParameter("BEGIN");
+			String end = req.getParameter("END");
+			if(begin == null || end == null){
+				return;
+			}else{
+				ManulAnalysisJob job = new ManulAnalysisJob(begin, end);
+				Thread t = new Thread(job);
+				t.start();
+			}
+		}
 		doPost(req, res);
 	}
 

@@ -72,8 +72,6 @@ public class StockCurrentPriceHolder {
 
 	private File getLatestSpjFile() {
 		String latestSpjFileName = StrateFilePath.getInstance().getRootPath()
-				+ OSUtil.getOSSeparator() + Constants.WEB_INF
-				+ OSUtil.getOSSeparator() + Constants.CLASSES
 				+ OSUtil.getOSSeparator() + Constants.LATEST_SPJ;
 
 		File latestSpjFile = new File(latestSpjFileName);

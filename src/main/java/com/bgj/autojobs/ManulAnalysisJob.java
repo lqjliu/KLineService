@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 
 import com.bgj.analysis.LXXDDataAnalyst;
 import com.bgj.analysis.MRZTDataAnalyst;
+import com.bgj.analysis.StockCurrentPriceHolder;
 import com.bgj.analysis.YZZTDataAnalyst;
 import com.bgj.analysis.ZJXGDataAnalyst;
 import com.bgj.exception.KLineException;
@@ -17,8 +18,16 @@ import com.bgj.util.StockMarketUtil;
 import com.bgj.util.StrateFilePath;
 import com.common.db.ConnectionPool;
 
-public class ManulAnalysisJob {
+public class ManulAnalysisJob implements Runnable {
 	private static Logger logger = Logger.getLogger(ManulAnalysisJob.class);
+
+	private String beginDate;
+	private String endDate;
+
+	public ManulAnalysisJob(String beginDate, String endDate) {
+		this.beginDate = beginDate;
+		this.endDate = endDate;
+	}
 
 	public static void main(String[] args) {
 		if (args == null || args.length < 4) {
@@ -33,8 +42,7 @@ public class ManulAnalysisJob {
 		}
 		System.out.println("db_url = " + db_url);
 		ConnectionPool.setDBURL(db_url);
-		
-		
+
 		String rootPath = "C:\\workspace_klineservice\\KLineService\\src\\main\\webapp";
 		rootPath = args[1];
 		if (rootPath == null && rootPath.equals("")) {
@@ -43,9 +51,14 @@ public class ManulAnalysisJob {
 		}
 		System.out.println("rootPath = " + rootPath);
 		StrateFilePath.getInstance().setRootPath(rootPath);
-		
+
 		String sbeginDate = args[2];
 		String sendDate = args[3];
+		analyzeHistoryData(sbeginDate, sendDate);
+
+	}
+
+	public static void analyzeHistoryData(String sbeginDate, String sendDate) {
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
 		Date beginDate = null;
 		Date endDate = null;
@@ -61,11 +74,22 @@ public class ManulAnalysisJob {
 		try {
 			while (!today.after(endDate)) {
 				if (!StockMarketUtil.isMarketOpen(today)) {
-					EventRecorder.recordEvent(ManulAnalysisJob.class,
-							 today + " Market is closed, so need not analysis data");
+					EventRecorder.recordEvent(ManulAnalysisJob.class, today
+							+ " Market is closed, so need not analysis data");
 					today = DateUtil.getNextDay(today);
 					continue;
 				}
+				EventRecorder.recordEvent(ManulAnalysisJob.class,
+						"Start to collect latest SPJ");
+				StockCurrentPriceHolder.getInstance()
+						.initTodayLatestCurrentPrice();
+				EventRecorder.recordEvent(ManulAnalysisJob.class,
+						"Today price of 000016 = "
+								+ StockCurrentPriceHolder.getInstance()
+										.getLatestSPJ("000016"));
+				EventRecorder.recordEvent(ManulAnalysisJob.class,
+						"Start to collect latest SPJ");
+
 				EventRecorder.recordEvent(ManulAnalysisJob.class,
 						"Start to analyse Strategies of " + today);
 
@@ -101,6 +125,9 @@ public class ManulAnalysisJob {
 		} catch (KLineException e) {
 			logger.error("analyse Strategy of date: " + today + " throw ", e);
 		}
+	}
 
+	public void run() {
+		ManulAnalysisJob.analyzeHistoryData(beginDate, endDate);
 	}
 }

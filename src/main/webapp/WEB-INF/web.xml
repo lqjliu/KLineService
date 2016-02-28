@@ -8,7 +8,12 @@
         <param-name>DB_URL</param-name>
         <param-value>10.66.137.11</param-value>
     </init-param>
+    <init-param>
+        <param-name>Stock_Info</param-name>
+        <param-value>/stock</param-value>
+    </init-param>
   </servlet>
+
   <servlet-mapping>
     <servlet-name>KLineServlet</servlet-name>
     <url-pattern>/klineservice</url-pattern>
