@@ -6,7 +6,12 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,7 +23,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.bgj.autojobs.BgjAutoQuartzServer;
-import com.bgj.autojobs.ManulAnalysisJob;
 import com.bgj.exception.KLineAppException;
 import com.bgj.util.StrateFilePath;
 import com.common.auth.AuthenticationResultBean;
@@ -32,12 +36,12 @@ public class KLineServlet extends HttpServlet {
 	public static final int INPUT_BUF_SIZE = 512;
 	private static Logger logger = Logger.getLogger(KLineServlet.class);
 
-
 	public void init() throws ServletException {
 		super.init();
 		String db_url = this.getServletConfig().getInitParameter("DB_URL");
 		ConnectionPool.setDBURL(db_url);
-		String stockPath = this.getServletConfig().getInitParameter("Stock_Info");
+		String stockPath = this.getServletConfig().getInitParameter(
+				"Stock_Info");
 		StrateFilePath.getInstance().setRootPath(stockPath);
 		BgjAutoQuartzServer.getInstance().startJob();
 	}
@@ -72,23 +76,65 @@ public class KLineServlet extends HttpServlet {
 		return (bos == null) ? "" : bos.toString(encoding);
 	}
 
+	private final static String TOKEN = "M2E0M2IzYzItODNiMi00YTc0LTliZDEtYTk5YzgwYmVjYWVhN2Q3ZDNlNWQtNzc1";
+
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
-		if (req.getParameter("TEST") != null) {
-			String begin = req.getParameter("BEGIN");
-			String end = req.getParameter("END");
-			logger.info("begin = " + begin);
-			logger.info("end = " + end);
-			if (begin == null || end == null) {
-				return;
-			} else {
-				ManulAnalysisJob job = new ManulAnalysisJob(begin, end);
-				Thread t = new Thread(job);
-				t.start();
+		String signature = req.getParameter("signature");
+		logger.info("signature = " + signature);
+
+		if (signature != null) {
+			String timestamp = req.getParameter("timestamp");
+			logger.info("signature = " + signature);
+
+			String nonce = req.getParameter("nonce");
+			logger.info("nonce = " + nonce);
+
+			String token = TOKEN;
+			logger.info("token = " + token);
+
+			String echostr = req.getParameter("echostr");
+			logger.info("echostr = " + echostr);
+
+			List<String> list = new ArrayList<String>();
+			list.add(token);
+			list.add(timestamp);
+			list.add(nonce);
+			Collections.sort(list);
+			String verifyInfo = "";
+			for (int i = 0; i < list.size(); i++) {
+				verifyInfo = (verifyInfo + list.get(i));
+			}
+			String sha = "";
+			try {
+				sha = sha1(verifyInfo);
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			}
+			logger.info("sha = " + sha);
+
+			if(sha.equals(signature)){
+				res.getWriter().write(echostr);
+				res.getWriter().flush();
 			}
 		} else {
 			doPost(req, res);
 		}
+	}
+
+	public static String sha1(String input) throws NoSuchAlgorithmException {
+		MessageDigest mDigest = MessageDigest.getInstance("SHA1");
+		byte[] result = mDigest.digest(input.getBytes());
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < result.length; i++) {
+			sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16)
+					.substring(1));
+		}
+		return sb.toString();
+	}
+
+	public static void main(String[] args) {
+		System.out.println();
 	}
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
