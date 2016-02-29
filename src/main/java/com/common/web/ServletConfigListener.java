@@ -5,7 +5,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 @WebListener
-public class ServletConfig implements ServletContextListener {
+public class ServletConfigListener implements ServletContextListener {
 
     public void contextInitialized(ServletContextEvent event) {
     	System.out.println("ServletConfig init");
