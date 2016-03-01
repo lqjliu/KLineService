@@ -85,7 +85,7 @@ public class KLineServlet extends HttpServlet {
 
 		if (signature != null) {
 			String timestamp = req.getParameter("timestamp");
-			logger.info("signature = " + signature);
+			logger.info("timestamp = " + timestamp);
 
 			String nonce = req.getParameter("nonce");
 			logger.info("nonce = " + nonce);
