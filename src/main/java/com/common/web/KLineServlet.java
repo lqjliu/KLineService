@@ -76,7 +76,7 @@ public class KLineServlet extends HttpServlet {
 		return (bos == null) ? "" : bos.toString(encoding);
 	}
 
-	private final static String TOKEN = "M2E0M2IzYzItODNiMi00YTc0LTliZDEtYTk5YzgwYmVjYWVhN2Q3ZDNlNWQtNzc1";
+	private final static String TOKEN = "M2E0M2IzYzItODNiMi00YTc0LTliZDE";
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
