@@ -143,6 +143,8 @@ public class KLineServlet extends HttpServlet {
 		try {
 			InputStream is = req.getInputStream();
 			String json = readAll(is, "UTF-8");
+			
+			logger.info("KLince receive POST request message = " + json);
 
 			JSONObject obj1 = null;
 			try {
