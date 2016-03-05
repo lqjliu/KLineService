@@ -83,6 +83,8 @@ public class GpphbServlet extends HttpServlet {
 		}
 
 		String echostr = request.getParameter("echostr");
+		logger.info("echostr = " + echostr);
+		
 		if (StringUtils.isNotBlank(echostr)) {
 			// 说明是一个仅仅用来验证的请求，回显echostr
 			response.getWriter().println(echostr);
@@ -92,11 +94,14 @@ public class GpphbServlet extends HttpServlet {
 		String encryptType = StringUtils.isBlank(request
 				.getParameter("encrypt_type")) ? "raw" : request
 				.getParameter("encrypt_type");
+		logger.info("encryptType = " + encryptType);
 
 		if ("raw".equals(encryptType)) {
 			// 明文传输的消息
 			WxMpXmlMessage inMessage = WxMpXmlMessage.fromXml(request
 					.getInputStream());
+			logger.info("inMessage = " + inMessage);
+
 			WxMpXmlOutMessage outMessage = wxMpMessageRouter.route(inMessage);
 			response.getWriter().write(outMessage.toXml());
 			return;
