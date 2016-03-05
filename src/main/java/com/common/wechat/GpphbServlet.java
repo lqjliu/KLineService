@@ -42,12 +42,6 @@ public class GpphbServlet extends HttpServlet {
 
 	public void init() throws ServletException {
 		super.init();
-		// String db_url = this.getServletConfig().getInitParameter("DB_URL");
-		// ConnectionPool.setDBURL(db_url);
-		// String stockPath = this.getServletConfig().getInitParameter(
-		// "Stock_Info");
-		// StrateFilePath.getInstance().setRootPath(stockPath);
-		// BgjAutoQuartzServer.getInstance().startJob();
 
 		wxMpConfigStorage = new GpphbConfig();
 		wxMpService = new WxMpServiceImpl();
@@ -128,10 +122,6 @@ public class GpphbServlet extends HttpServlet {
 			String signature) {
 		List<String> list = new ArrayList<String>();
 		String token = wxMpConfigStorage.getToken();
-		logger.info("token = " + token);
-		logger.info("nonce = " + nonce);
-		logger.info("timestamp = " + timestamp);
-		logger.info("signature = " + signature);
 
 		list.add(token);
 		
@@ -148,7 +138,6 @@ public class GpphbServlet extends HttpServlet {
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-		logger.info("sha = " + sha);
 		return sha.equals(signature);
 	}
 
@@ -165,7 +154,6 @@ public class GpphbServlet extends HttpServlet {
 
 	public void destroy() {
 		super.destroy();
-		// BgjAutoQuartzServer.getInstance().stopJob();
 	}
 
 }
