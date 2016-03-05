@@ -24,6 +24,7 @@ import me.chanjar.weixin.mp.api.WxMpServiceImpl;
 import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.WxMpXmlOutMessage;
 import me.chanjar.weixin.mp.bean.WxMpXmlOutTextMessage;
+import me.chanjar.weixin.mp.bean.outxmlbuilder.TextBuilder;
 
 import org.apache.log4j.Logger;
 
@@ -84,7 +85,7 @@ public class GpphbServlet extends HttpServlet {
 
 		String echostr = request.getParameter("echostr");
 		logger.info("echostr = " + echostr);
-		
+
 		if (StringUtils.isNotBlank(echostr)) {
 			// 说明是一个仅仅用来验证的请求，回显echostr
 			response.getWriter().println(echostr);
@@ -102,23 +103,24 @@ public class GpphbServlet extends HttpServlet {
 					.getInputStream());
 			logger.info("inMessage = " + inMessage);
 
-			WxMpXmlOutMessage outMessage = wxMpMessageRouter.route(inMessage);
+//			 m.setToUserName(this.toUserName);
+//			    m.setFromUserName(this.fromUserName);
+//			    m.setCreateTime(System.currentTimeMillis() / 1000l);		
+			
+			TextBuilder textBuild = WxMpXmlOutMessage.TEXT();
+					textBuild = textBuild.content("测试加密消息");
+					textBuild = textBuild.fromUser(inMessage.getToUserName());
+					
+					textBuild = textBuild.toUser(inMessage.getFromUserName());
+					WxMpXmlOutMessage outMessage = textBuild.build();
+			
+			
+			
+			logger.info("outMessage = " + outMessage);
+
 			response.getWriter().write(outMessage.toXml());
 			return;
 		}
-
-		if ("aes".equals(encryptType)) {
-			// 是aes加密的消息
-			String msgSignature = request.getParameter("msg_signature");
-			WxMpXmlMessage inMessage = WxMpXmlMessage.fromEncryptedXml(
-					request.getInputStream(), wxMpConfigStorage, timestamp,
-					nonce, msgSignature);
-			WxMpXmlOutMessage outMessage = wxMpMessageRouter.route(inMessage);
-			response.getWriter().write(
-					outMessage.toEncryptedXml(wxMpConfigStorage));
-			return;
-		}
-
 		response.getWriter().println("不可识别的加密类型");
 		return;
 	}
@@ -129,7 +131,7 @@ public class GpphbServlet extends HttpServlet {
 		String token = wxMpConfigStorage.getToken();
 
 		list.add(token);
-		
+
 		list.add(timestamp);
 		list.add(nonce);
 		Collections.sort(list);
