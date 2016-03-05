@@ -41,12 +41,12 @@ public class GpphbServlet extends HttpServlet {
 
 	public void init() throws ServletException {
 		super.init();
-		String db_url = this.getServletConfig().getInitParameter("DB_URL");
-		ConnectionPool.setDBURL(db_url);
-		String stockPath = this.getServletConfig().getInitParameter(
-				"Stock_Info");
-		StrateFilePath.getInstance().setRootPath(stockPath);
-		BgjAutoQuartzServer.getInstance().startJob();
+//		String db_url = this.getServletConfig().getInitParameter("DB_URL");
+//		ConnectionPool.setDBURL(db_url);
+//		String stockPath = this.getServletConfig().getInitParameter(
+//				"Stock_Info");
+//		StrateFilePath.getInstance().setRootPath(stockPath);
+//		BgjAutoQuartzServer.getInstance().startJob();
 
 		wxMpConfigStorage = new GpphbConfig();
 		wxMpService = new WxMpServiceImpl();
@@ -124,7 +124,7 @@ public class GpphbServlet extends HttpServlet {
 
 	public void destroy() {
 		super.destroy();
-		BgjAutoQuartzServer.getInstance().stopJob();
+//		BgjAutoQuartzServer.getInstance().stopJob();
 	}
 
 }

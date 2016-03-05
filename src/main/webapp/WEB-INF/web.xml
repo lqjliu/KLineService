@@ -14,9 +14,19 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-
+	
+	<servlet>
+		<servlet-name>GpphbServlet</servlet-name>
+		<servlet-class>com.common.wechat.GpphbServlet</servlet-class>
+	</servlet>
+	
 	<servlet-mapping>
 		<servlet-name>KLineServlet</servlet-name>
 		<url-pattern>/klineservice</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>GpphbServlet</servlet-name>
+		<url-pattern>/gpphbservice</url-pattern>
 	</servlet-mapping>
 </web-app>
