@@ -116,19 +116,20 @@ public class GpphbServlet extends HttpServlet {
 					outM = "";
 					for (int i = 0; i < list.size(); i++) {
 						StrategyQueryStockBean bean = list.get(i);
-						String stockInfo = "";
-						stockInfo = "<a href=\"http://www.sohu.com\">"
-								+ bean.getStockId() + " " + bean.getName()
-								+ "</a>" + " " + bean.getZdf() + " "
-								+ bean.getLatestSpj();
-						outM += (stockInfo + "\n");
+						StringBuffer stockInfo = new StringBuffer();
+						stockInfo.append("<a href=\"http://www.sohu.com\">")
+								.append(bean.getStockId())
+								.append(bean.getName()).append("</a>")
+								.append(bean.getZdf())
+								.append(bean.getLatestSpj()).append("\n");
+						outM += stockInfo;
 					}
 				} catch (KLineException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-
+			logger.info("Out content = " + outM);
 			// TextBuilder textBuild =
 			// WxMpXmlOutMessage.TEXT().content("测试加密消息").fromUser(inMessage.getToUserName()).toUser(inMessage.getFromUserName()).build();
 			// textBuild = textBuild.;
