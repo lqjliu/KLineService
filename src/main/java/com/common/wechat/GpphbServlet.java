@@ -1,6 +1,11 @@
 package com.common.wechat;
 
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -22,10 +27,6 @@ import me.chanjar.weixin.mp.bean.WxMpXmlOutTextMessage;
 
 import org.apache.log4j.Logger;
 
-import com.bgj.autojobs.BgjAutoQuartzServer;
-import com.bgj.util.StrateFilePath;
-import com.common.db.ConnectionPool;
-
 public class GpphbServlet extends HttpServlet {
 
 	/**
@@ -41,12 +42,12 @@ public class GpphbServlet extends HttpServlet {
 
 	public void init() throws ServletException {
 		super.init();
-//		String db_url = this.getServletConfig().getInitParameter("DB_URL");
-//		ConnectionPool.setDBURL(db_url);
-//		String stockPath = this.getServletConfig().getInitParameter(
-//				"Stock_Info");
-//		StrateFilePath.getInstance().setRootPath(stockPath);
-//		BgjAutoQuartzServer.getInstance().startJob();
+		// String db_url = this.getServletConfig().getInitParameter("DB_URL");
+		// ConnectionPool.setDBURL(db_url);
+		// String stockPath = this.getServletConfig().getInitParameter(
+		// "Stock_Info");
+		// StrateFilePath.getInstance().setRootPath(stockPath);
+		// BgjAutoQuartzServer.getInstance().startJob();
 
 		wxMpConfigStorage = new GpphbConfig();
 		wxMpService = new WxMpServiceImpl();
@@ -80,7 +81,8 @@ public class GpphbServlet extends HttpServlet {
 		String nonce = request.getParameter("nonce");
 		String timestamp = request.getParameter("timestamp");
 
-		if (!wxMpService.checkSignature(timestamp, nonce, signature)) {
+		if (verifySignature(nonce, timestamp, signature)) {
+			// if (!wxMpService.checkSignature(timestamp, nonce, signature)) {
 			// 消息签名不正确，说明不是公众平台发过来的消息
 			response.getWriter().println("非法请求");
 			return;
@@ -122,9 +124,41 @@ public class GpphbServlet extends HttpServlet {
 		return;
 	}
 
+	private boolean verifySignature(String nonce, String timestamp,
+			String signature) {
+		List<String> list = new ArrayList<String>();
+		list.add(wxMpConfigStorage.getToken());
+		list.add(timestamp);
+		list.add(nonce);
+		Collections.sort(list);
+		String verifyInfo = "";
+		for (int i = 0; i < list.size(); i++) {
+			verifyInfo = (verifyInfo + list.get(i));
+		}
+		String sha = "";
+		try {
+			sha = sha1(verifyInfo);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		logger.info("sha = " + sha);
+		return sha.equals(signature);
+	}
+
+	private String sha1(String input) throws NoSuchAlgorithmException {
+		MessageDigest mDigest = MessageDigest.getInstance("SHA1");
+		byte[] result = mDigest.digest(input.getBytes());
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < result.length; i++) {
+			sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16)
+					.substring(1));
+		}
+		return sb.toString();
+	}
+
 	public void destroy() {
 		super.destroy();
-//		BgjAutoQuartzServer.getInstance().stopJob();
+		// BgjAutoQuartzServer.getInstance().stopJob();
 	}
 
 }
