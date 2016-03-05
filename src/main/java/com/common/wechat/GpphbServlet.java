@@ -109,7 +109,7 @@ public class GpphbServlet extends HttpServlet {
 			String inM = inMessage.getContent();
 			String outM = "再来一次:" + inM + "\n";
 			outM += "Test Test Test Test";
-			
+
 			if (inM.equals("MRZT")) {
 				Date date = DateUtil.parseDay("2016-03-04");
 				try {
@@ -122,7 +122,8 @@ public class GpphbServlet extends HttpServlet {
 						stockInfo.append("<a href=\"http://www.sohu.com\">")
 								.append(bean.getStockId()).append("</a>")
 								.append(" ").append(bean.getName()).append(" ")
-								.append(bean.getZdf()).append("%").append("\n");
+								.append(bean.getZdf()).append("% ")
+								.append(bean.getLatestSpj()).append("\n");
 						outM += stockInfo;
 					}
 				} catch (KLineException e) {
