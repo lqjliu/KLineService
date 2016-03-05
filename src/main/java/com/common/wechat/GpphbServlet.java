@@ -127,7 +127,14 @@ public class GpphbServlet extends HttpServlet {
 	private boolean verifySignature(String nonce, String timestamp,
 			String signature) {
 		List<String> list = new ArrayList<String>();
-		list.add(wxMpConfigStorage.getToken());
+		String token = wxMpConfigStorage.getToken();
+		logger.info("token = " + token);
+		logger.info("nonce = " + nonce);
+		logger.info("timestamp = " + timestamp);
+		logger.info("signature = " + signature);
+
+		list.add(token);
+		
 		list.add(timestamp);
 		list.add(nonce);
 		Collections.sort(list);
