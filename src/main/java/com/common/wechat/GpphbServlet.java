@@ -107,7 +107,9 @@ public class GpphbServlet extends HttpServlet {
 					.getInputStream());
 			logger.info("inMessage = " + inMessage);
 			String inM = inMessage.getContent();
-			String outM = "再来一次:" + inM;
+			String outM = "再来一次:" + inM + "\n";
+			outM += "Test Test Test Test";
+			
 			if (inM.equals("MRZT")) {
 				Date date = DateUtil.parseDay("2016-03-04");
 				try {
