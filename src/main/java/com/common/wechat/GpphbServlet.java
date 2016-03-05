@@ -98,24 +98,24 @@ public class GpphbServlet extends HttpServlet {
 		logger.info("encryptType = " + encryptType);
 
 		if ("raw".equals(encryptType)) {
-			// 明文传输的消息
 			WxMpXmlMessage inMessage = WxMpXmlMessage.fromXml(request
 					.getInputStream());
 			logger.info("inMessage = " + inMessage);
+			String inM = inMessage.getContent();
+			String outM = "再来一次:" + inM;
 
-//			 m.setToUserName(this.toUserName);
-//			    m.setFromUserName(this.fromUserName);
-//			    m.setCreateTime(System.currentTimeMillis() / 1000l);		
-			
-			TextBuilder textBuild = WxMpXmlOutMessage.TEXT();
-					textBuild = textBuild.content("测试加密消息");
-					textBuild = textBuild.fromUser(inMessage.getToUserName());
-					
-					textBuild = textBuild.toUser(inMessage.getFromUserName());
-					WxMpXmlOutMessage outMessage = textBuild.build();
-			
-			
-			
+			// TextBuilder textBuild =
+			// WxMpXmlOutMessage.TEXT().content("测试加密消息").fromUser(inMessage.getToUserName()).toUser(inMessage.getFromUserName()).build();
+			// textBuild = textBuild.;
+			// textBuild = textBuild.;
+			//
+			// textBuild = textBuild;
+			// WxMpXmlOutMessage outMessage = textBuild.build();
+
+			WxMpXmlOutMessage outMessage = WxMpXmlOutMessage.TEXT()
+					.content(outM).fromUser(inMessage.getToUserName())
+					.toUser(inMessage.getFromUserName()).build();
+
 			logger.info("outMessage = " + outMessage);
 
 			response.getWriter().write(outMessage.toXml());
