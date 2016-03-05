@@ -5,6 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -24,9 +25,13 @@ import me.chanjar.weixin.mp.api.WxMpServiceImpl;
 import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.WxMpXmlOutMessage;
 import me.chanjar.weixin.mp.bean.WxMpXmlOutTextMessage;
-import me.chanjar.weixin.mp.bean.outxmlbuilder.TextBuilder;
 
 import org.apache.log4j.Logger;
+
+import com.bgj.exception.KLineException;
+import com.bgj.strategy.CommonStrategyMgrImpl;
+import com.bgj.strategy.StrategyQueryStockBean;
+import com.bgj.util.DateUtil;
 
 public class GpphbServlet extends HttpServlet {
 
@@ -103,6 +108,26 @@ public class GpphbServlet extends HttpServlet {
 			logger.info("inMessage = " + inMessage);
 			String inM = inMessage.getContent();
 			String outM = "再来一次:" + inM;
+			if (inM.equals("MRZT")) {
+				Date date = DateUtil.parseDay("2016-03-04");
+				try {
+					List<StrategyQueryStockBean> list = CommonStrategyMgrImpl
+							.getInstance().queryStocks(date, "MRZT");
+					outM = "";
+					for (int i = 0; i < list.size(); i++) {
+						StrategyQueryStockBean bean = list.get(i);
+						String stockInfo = "";
+						stockInfo = "a href=\"http://www.sohu.com\">"
+								+ bean.getStockId() + " " + bean.getName()
+								+ "</a>" + " " + bean.getZdf() + " "
+								+ bean.getLatestSpj();
+						outM += (stockInfo + "\n");
+					}
+				} catch (KLineException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 
 			// TextBuilder textBuild =
 			// WxMpXmlOutMessage.TEXT().content("测试加密消息").fromUser(inMessage.getToUserName()).toUser(inMessage.getFromUserName()).build();
@@ -129,11 +154,15 @@ public class GpphbServlet extends HttpServlet {
 			String signature) {
 		List<String> list = new ArrayList<String>();
 		String token = wxMpConfigStorage.getToken();
+		logger.info("token = " + token);
 
 		list.add(token);
 
 		list.add(timestamp);
+		logger.info("timestamp" + timestamp);
+
 		list.add(nonce);
+		logger.info("nonce" + nonce);
 		Collections.sort(list);
 		String verifyInfo = "";
 		for (int i = 0; i < list.size(); i++) {
