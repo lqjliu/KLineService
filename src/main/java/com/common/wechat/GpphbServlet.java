@@ -120,8 +120,7 @@ public class GpphbServlet extends HttpServlet {
 						stockInfo.append("<a href=\"http://www.sohu.com\">")
 								.append(bean.getStockId()).append(" ")
 								.append(bean.getName()).append("</a>").append(" ")
-								.append(bean.getZdf()).append("% ")
-								.append(bean.getLatestSpj()).append("\n");
+								.append(bean.getZdf()).append("%").append("\n");
 						outM += stockInfo;
 					}
 				} catch (KLineException e) {
