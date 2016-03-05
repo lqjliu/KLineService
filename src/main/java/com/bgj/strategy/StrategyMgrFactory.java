@@ -13,6 +13,6 @@ public class StrategyMgrFactory {
 	}
 
 	public StrategyMgr getCommonStrategyMgr() {
-		return new CommonStrategyMgrImpl();
+		return CommonStrategyMgrImpl.getInstance();
 	}
 }

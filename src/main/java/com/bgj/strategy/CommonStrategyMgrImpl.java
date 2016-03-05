@@ -13,6 +13,15 @@ import com.bgj.util.Config;
 import com.bgj.util.DateUtil;
 
 public class CommonStrategyMgrImpl implements StrategyMgr {
+	private static CommonStrategyMgrImpl instance = new CommonStrategyMgrImpl();
+
+	public static CommonStrategyMgrImpl getInstance() {
+		return instance;
+	}
+
+	private CommonStrategyMgrImpl() {
+
+	}
 
 	public List<StrategyQueryStockBean> queryStocks(Date date,
 			String strategyName) throws KLineException {
