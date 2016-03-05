@@ -118,9 +118,9 @@ public class GpphbServlet extends HttpServlet {
 						StrategyQueryStockBean bean = list.get(i);
 						StringBuffer stockInfo = new StringBuffer();
 						stockInfo.append("<a href=\"http://www.sohu.com\">")
-								.append(bean.getStockId())
-								.append(bean.getName()).append("</a>")
-								.append(bean.getZdf())
+								.append(bean.getStockId()).append(" ")
+								.append(bean.getName()).append("</a>").append(" ")
+								.append(bean.getZdf()).append("% ")
 								.append(bean.getLatestSpj()).append("\n");
 						outM += stockInfo;
 					}
