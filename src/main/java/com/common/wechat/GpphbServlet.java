@@ -137,6 +137,9 @@ public class GpphbServlet extends HttpServlet {
 
 	private String getStockMessage(String inM, String outM) {
 		if (inM.indexOf("MRZT") >= 0) {
+			String sRow = inM.substring(inM.length() - 2);
+			int rows = Integer.parseInt(sRow);
+			inM = inM.substring(0, inM.length() - 2);
 			Date date = new Date();
 			if (inM.length() > 4) {
 				String sDate = inM.substring(4).trim();
@@ -156,7 +159,7 @@ public class GpphbServlet extends HttpServlet {
 				if (list.size() == 0) {
 					return "还未收市，本账号只提供收市后数据";
 				}
-				outM = convertWetChatMessage(list);
+				outM = convertWetChatMessage(list,rows);
 				String header = "涨停榜(" + DateUtil.formatDay(date) + "):\n";
 				header += "代码 名称 当日价 累计涨幅\n";
 				outM = header + outM;
@@ -167,17 +170,20 @@ public class GpphbServlet extends HttpServlet {
 		return outM;
 	}
 
-	private String convertWetChatMessage(List<StrategyQueryStockBean> list) {
+	private String convertWetChatMessage(List<StrategyQueryStockBean> list, int row) {
 		String outM;
 		outM = "";
 		for (int i = 0; i < list.size(); i++) {
+			if(i>row){
+				break;
+			}
 			StrategyQueryStockBean bean = list.get(i);
 			// http://m.money.163.com/stock/0600036.html
 			// http://m.quote.eastmoney.com/stock,600162.shtml
 			// http://s.m.sohu.com/t/cn/001/300001.html
 			// http://m.hexun.com/stock.php?code=156
 			double leijiPercentage = MathUtil.formatDoubleWith2((bean
-					.getLatestSpj() - bean.getDqj() / bean.getDqj()) * 100);
+					.getLatestSpj() - bean.getDqj()) / bean.getDqj() * 100);
 
 			StringBuffer stockInfo = new StringBuffer();
 			stockInfo
@@ -186,7 +192,7 @@ public class GpphbServlet extends HttpServlet {
 					.append("<a href=\"http://m.quote.eastmoney.com/stock,"
 							+ bean.getStockId() + ".shtml\">")
 					.append(bean.getName()).append("</a>").append(" ")
-					.append(bean.getDqj()).append("% ")
+					.append(bean.getDqj()).append(" ")
 					.append(leijiPercentage + "%").append("\n");
 			outM += stockInfo;
 		}
