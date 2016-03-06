@@ -62,6 +62,7 @@ public class StockAnalysingDataFileAccessor implements StockAnalysingAccessor {
 
 	public List<StrategyQueryStockBean> query(String strategyName, Date date,
 			String additionalInfo) throws KLineException {
+		logger.info("strategyName = " + strategyName + " Date = " + date + " additionalInfo = " + additionalInfo);
 		List<StrategyQueryStockBean> result = null;
 		result = Cache.getInstance(strategyName).getStockFromCache(date,
 				additionalInfo);
@@ -78,6 +79,9 @@ public class StockAnalysingDataFileAccessor implements StockAnalysingAccessor {
 								AppExceptionKeys.SYSTEM_HAS_NO_DATA_OF_THIS_DAY);
 					}
 				}
+				logger.info("StrategyStockFile = " + strategyStockFile);
+				logger.info("strategyName = " + strategyName + " Date = " + date + " additionalInfo = " + additionalInfo);
+
 				result = StockFileAccessingUtil
 						.getStockInfoFromFile(strategyStockFile);
 
