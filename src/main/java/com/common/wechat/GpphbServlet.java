@@ -102,7 +102,8 @@ public class GpphbServlet extends HttpServlet {
 	}
 
 	private String getStockMessage(String inM, String outM) {
-		if (inM.indexOf("MRZT") >= 0 || inM.indexOf("YZZT") >= 0) {
+		if (inM.indexOf("MRZT") >= 0 || inM.indexOf("YZZT") >= 0
+				|| inM.indexOf("LSXG") >= 0 || inM.indexOf("LXXD") >= 0) {
 			String strategyName = inM.substring(0, 4);
 			Date date = new Date();
 			if (inM.length() > 4) {
