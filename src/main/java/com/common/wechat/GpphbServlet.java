@@ -32,6 +32,8 @@ import com.bgj.exception.KLineException;
 import com.bgj.strategy.CommonStrategyMgrImpl;
 import com.bgj.strategy.StrategyQueryStockBean;
 import com.bgj.util.DateUtil;
+import com.bgj.util.MathUtil;
+import com.bgj.util.StockMarketUtil;
 
 public class GpphbServlet extends HttpServlet {
 
@@ -110,35 +112,7 @@ public class GpphbServlet extends HttpServlet {
 			String outM = "再来一次:" + inM + "\n";
 			outM += "Test Test Test Test";
 
-			if (inM.equals("MRZT")) {
-				Date date = DateUtil.parseDay("2016-03-04");
-				try {
-					List<StrategyQueryStockBean> list = CommonStrategyMgrImpl
-							.getInstance().queryStocks(date, "MRZT");
-					outM = "";
-					for (int i = 0; i < list.size(); i++) {
-						StrategyQueryStockBean bean = list.get(i);
-						// http://m.money.163.com/stock/0600036.html
-						// http://m.quote.eastmoney.com/stock,600162.shtml
-						// http://s.m.sohu.com/t/cn/001/300001.html
-						// http://m.hexun.com/stock.php?code=156
-
-						StringBuffer stockInfo = new StringBuffer();
-						stockInfo
-								.append(bean.getStockId())
-								.append(" ")
-								.append("<a href=\"http://m.quote.eastmoney.com/stock,"
-										+ bean.getStockId() + ".shtml\">")
-								.append(bean.getName()).append("</a>")
-								.append(" ").append(bean.getZdf()).append("% ")
-								.append(bean.getLatestSpj()).append("\n");
-						outM += stockInfo;
-					}
-				} catch (KLineException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+			outM = getStockMessage(inM, outM);
 			logger.info("Out content = " + outM);
 			// TextBuilder textBuild =
 			// WxMpXmlOutMessage.TEXT().content("测试加密消息").fromUser(inMessage.getToUserName()).toUser(inMessage.getFromUserName()).build();
@@ -159,6 +133,65 @@ public class GpphbServlet extends HttpServlet {
 		}
 		response.getWriter().println("不可识别的加密类型");
 		return;
+	}
+
+	private String getStockMessage(String inM, String outM) {
+		if (inM.indexOf("MRZT") == 0) {
+			Date date = new Date();
+			if (inM.length() > 4) {
+				boolean invalidDate = false;
+				String sDate = inM.substring(4).trim();
+				try {
+					date = DateUtil.parseDay(sDate);
+				} catch (RuntimeException ex) {
+					return "日期格式不对， 请输入：yyyy-MM-dd";
+				}
+			}
+			String cause = StockMarketUtil.getMarketRestCause(date);
+			if (cause != null) {
+				return cause;
+			}
+			try {
+				List<StrategyQueryStockBean> list = CommonStrategyMgrImpl
+						.getInstance().queryStocks(date, "MRZT");
+				if (list.size() == 0) {
+					return "还未收市，本账号只提供收市后数据";
+				}
+				outM = convertWetChatMessage(list);
+				String header = "涨停榜(" + DateUtil.formatDay(date) + "):\n";
+				header = "代码 名称 当日价 累计涨幅\n";
+				outM = header + outM;
+			} catch (KLineException e) {
+				logger.error("Read Stock throw exception:", e);
+			}
+		}
+		return outM;
+	}
+
+	private String convertWetChatMessage(List<StrategyQueryStockBean> list) {
+		String outM;
+		outM = "";
+		for (int i = 0; i < list.size(); i++) {
+			StrategyQueryStockBean bean = list.get(i);
+			// http://m.money.163.com/stock/0600036.html
+			// http://m.quote.eastmoney.com/stock,600162.shtml
+			// http://s.m.sohu.com/t/cn/001/300001.html
+			// http://m.hexun.com/stock.php?code=156
+			double leijiPercentage = MathUtil.formatDoubleWith2((bean
+					.getLatestSpj() - bean.getDqj() / bean.getDqj()) * 100);
+
+			StringBuffer stockInfo = new StringBuffer();
+			stockInfo
+					.append(bean.getStockId())
+					.append(" ")
+					.append("<a href=\"http://m.quote.eastmoney.com/stock,"
+							+ bean.getStockId() + ".shtml\">")
+					.append(bean.getName()).append("</a>").append(" ")
+					.append(bean.getDqj()).append("% ")
+					.append(leijiPercentage + "%").append("\n");
+			outM += stockInfo;
+		}
+		return outM;
 	}
 
 	private boolean verifySignature(String nonce, String timestamp,
