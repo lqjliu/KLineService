@@ -84,17 +84,13 @@ public class GpphbServlet extends HttpServlet {
 		String timestamp = request.getParameter("timestamp");
 
 		if (!verifySignature(nonce, timestamp, signature)) {
-			// if (!wxMpService.checkSignature(timestamp, nonce, signature)) {
-			// 消息签名不正确，说明不是公众平台发过来的消息
 			response.getWriter().println("非法请求");
 			return;
 		}
 
 		String echostr = request.getParameter("echostr");
-		logger.info("echostr = " + echostr);
 
 		if (StringUtils.isNotBlank(echostr)) {
-			// 说明是一个仅仅用来验证的请求，回显echostr
 			response.getWriter().println(echostr);
 			return;
 		}
@@ -107,27 +103,15 @@ public class GpphbServlet extends HttpServlet {
 		if ("raw".equals(encryptType)) {
 			WxMpXmlMessage inMessage = WxMpXmlMessage.fromXml(request
 					.getInputStream());
-			logger.info("inMessage = " + inMessage);
 			String inM = inMessage.getContent();
 			String outM = "再来一次:" + inM + "\n";
 			outM += "Test Test Test Test";
 
 			outM = getStockMessage(inM, outM);
-			logger.info("Out content = " + outM);
-			// TextBuilder textBuild =
-			// WxMpXmlOutMessage.TEXT().content("测试加密消息").fromUser(inMessage.getToUserName()).toUser(inMessage.getFromUserName()).build();
-			// textBuild = textBuild.;
-			// textBuild = textBuild.;
-			//
-			// textBuild = textBuild;
-			// WxMpXmlOutMessage outMessage = textBuild.build();
 
 			WxMpXmlOutMessage outMessage = WxMpXmlOutMessage.TEXT()
 					.content(outM).fromUser(inMessage.getToUserName())
 					.toUser(inMessage.getFromUserName()).build();
-
-			logger.info("outMessage = " + outMessage);
-
 			response.getWriter().write(outMessage.toXml());
 			return;
 		}
@@ -170,8 +154,7 @@ public class GpphbServlet extends HttpServlet {
 	private final static int WEB_CHAT_LIMITIATION = 21;
 
 	private String convertWetChatMessage(List<StrategyQueryStockBean> list) {
-		String outM;
-		outM = "";
+		String outM = "";
 		for (int i = 0; i < list.size(); i++) {
 			if (i > WEB_CHAT_LIMITIATION) {
 				break;
@@ -191,7 +174,6 @@ public class GpphbServlet extends HttpServlet {
 					.append("<a href=\"http://m.quote.eastmoney.com/stock,"
 							+ bean.getStockId() + ".shtml\">")
 					.append(bean.getName()).append("</a>").append(" ")
-					// .append(bean.getDqj()).append(" ")
 					.append(leijiPercentage + "%").append("\n");
 			outM += stockInfo;
 		}
@@ -202,15 +184,10 @@ public class GpphbServlet extends HttpServlet {
 			String signature) {
 		List<String> list = new ArrayList<String>();
 		String token = wxMpConfigStorage.getToken();
-		logger.info("token = " + token);
 
 		list.add(token);
-
 		list.add(timestamp);
-		logger.info("timestamp" + timestamp);
-
 		list.add(nonce);
-		logger.info("nonce" + nonce);
 		Collections.sort(list);
 		String verifyInfo = "";
 		for (int i = 0; i < list.size(); i++) {
@@ -220,7 +197,7 @@ public class GpphbServlet extends HttpServlet {
 		try {
 			sha = sha1(verifyInfo);
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			logger.error("SHA throw:", e);
 		}
 		return sha.equals(signature);
 	}
