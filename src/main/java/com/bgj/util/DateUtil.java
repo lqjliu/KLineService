@@ -21,7 +21,7 @@ public class DateUtil {
 		try {
 			result = df.parse(sDate);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			throw new RuntimeException(ex);
 		}
 		return result;
 	}
