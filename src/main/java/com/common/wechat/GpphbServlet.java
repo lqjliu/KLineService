@@ -83,7 +83,6 @@ public class GpphbServlet extends HttpServlet {
 		String encryptType = StringUtils.isBlank(request
 				.getParameter("encrypt_type")) ? "raw" : request
 				.getParameter("encrypt_type");
-		logger.info("encryptType = " + encryptType);
 
 		if ("raw".equals(encryptType)) {
 			WxMpXmlMessage inMessage = WxMpXmlMessage.fromXml(request

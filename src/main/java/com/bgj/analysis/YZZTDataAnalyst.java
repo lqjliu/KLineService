@@ -17,7 +17,7 @@ public class YZZTDataAnalyst {
 		String day = DateUtil.formatDay(date);
 		String sql = "SELECT * FROM stockdailyinfo WHERE  DATE LIKE '" + day
 				+ "%' AND todayopenprice != 0 "
-				+ " AND highestPrice = lowestPrice ORDER BY zdf DESC";
+				+ " AND highestPrice = lowestPrice AND zde > 0 ORDER BY zdf DESC";
 		
 		List<StockdailyinfoVO> list = GhlhDAO.list(sql,
 				"com.bgj.dao.StockdailyinfoVO");
@@ -36,9 +36,6 @@ public class YZZTDataAnalyst {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-//		 analyseMultipleDay();
-
 	}
 
 	private static void analyseMultipleDay() {
