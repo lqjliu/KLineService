@@ -146,7 +146,7 @@ public class GpphbServlet extends HttpServlet {
 		if (strategy.equals("LXXD")) {
 			return LXXDStrategyMgrImpl.getInstance();
 		}
-		if (strategy.equals("ZJXG")) {
+		if (strategy.equals("LSXG")) {
 			return ZJXGStrategyMgrImpl.getInstance();
 		}
 		return null;
