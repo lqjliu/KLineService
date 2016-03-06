@@ -55,21 +55,6 @@ public class GpphbServlet extends HttpServlet {
 		wxMpService = new WxMpServiceImpl();
 		wxMpService.setWxMpConfigStorage(wxMpConfigStorage);
 
-		WxMpMessageHandler handler = new WxMpMessageHandler() {
-			@Override
-			public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage,
-					Map<String, Object> context, WxMpService wxMpService,
-					WxSessionManager sessionManager) throws WxErrorException {
-				WxMpXmlOutTextMessage m = WxMpXmlOutMessage.TEXT()
-						.content("测试加密消息").fromUser(wxMessage.getToUserName())
-						.toUser(wxMessage.getFromUserName()).build();
-				return m;
-			}
-		};
-
-		wxMpMessageRouter = new WxMpMessageRouter(wxMpService);
-		wxMpMessageRouter.rule().async(false).content("哈哈") // 拦截内容为“哈哈”的消息
-				.handler(handler).end();
 	}
 
 	@Override
@@ -120,7 +105,8 @@ public class GpphbServlet extends HttpServlet {
 	}
 
 	private String getStockMessage(String inM, String outM) {
-		if (inM.indexOf("MRZT") >= 0) {
+		if (inM.indexOf("MRZT") >= 0 || inM.indexOf("YZZT") >=0 ) {
+			String strategyName = inM.substring(0, 4);
 			Date date = new Date();
 			if (inM.length() > 4) {
 				String sDate = inM.substring(4).trim();
@@ -136,7 +122,7 @@ public class GpphbServlet extends HttpServlet {
 			}
 			try {
 				List<StrategyQueryStockBean> list = CommonStrategyMgrImpl
-						.getInstance().queryStocks(date, "MRZT");
+						.getInstance().queryStocks(date, strategyName);
 				if (list.size() == 0) {
 					return "还未收市，本账号只提供收市后数据";
 				}
