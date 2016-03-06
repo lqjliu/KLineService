@@ -118,12 +118,17 @@ public class GpphbServlet extends HttpServlet {
 					outM = "";
 					for (int i = 0; i < list.size(); i++) {
 						StrategyQueryStockBean bean = list.get(i);
+						// http://m.money.163.com/stock/0600036.html
+						// http://m.quote.eastmoney.com/stock,600162.shtml
+						// http://s.m.sohu.com/t/cn/001/300001.html
+						// http://m.hexun.com/stock.php?code=156
+
 						StringBuffer stockInfo = new StringBuffer();
 						stockInfo
 								.append(bean.getStockId())
 								.append(" ")
-								.append("<a href=\"http://m.money.163.com/stock/0"
-										+ bean.getStockId() + ".html\">")
+								.append("<a href=\"http://m.quote.eastmoney.com/stock,"
+										+ bean.getStockId() + ".shtml\">")
 								.append(bean.getName()).append("</a>")
 								.append(" ").append(bean.getZdf()).append("% ")
 								.append(bean.getLatestSpj()).append("\n");
