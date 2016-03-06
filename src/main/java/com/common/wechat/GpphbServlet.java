@@ -137,9 +137,6 @@ public class GpphbServlet extends HttpServlet {
 
 	private String getStockMessage(String inM, String outM) {
 		if (inM.indexOf("MRZT") >= 0) {
-			String sRow = inM.substring(inM.length() - 2);
-			int rows = Integer.parseInt(sRow);
-			inM = inM.substring(0, inM.length() - 2);
 			Date date = new Date();
 			if (inM.length() > 4) {
 				String sDate = inM.substring(4).trim();
@@ -159,7 +156,7 @@ public class GpphbServlet extends HttpServlet {
 				if (list.size() == 0) {
 					return "还未收市，本账号只提供收市后数据";
 				}
-				outM = convertWetChatMessage(list,rows);
+				outM = convertWetChatMessage(list);
 				String header = "涨停榜(" + DateUtil.formatDay(date) + "):\n";
 				header += "代码 名称 当日价 累计涨幅\n";
 				outM = header + outM;
@@ -170,11 +167,13 @@ public class GpphbServlet extends HttpServlet {
 		return outM;
 	}
 
-	private String convertWetChatMessage(List<StrategyQueryStockBean> list, int row) {
+	private final static int WEB_CHAT_LIMITIATION = 21;
+
+	private String convertWetChatMessage(List<StrategyQueryStockBean> list) {
 		String outM;
 		outM = "";
 		for (int i = 0; i < list.size(); i++) {
-			if(i>row){
+			if (i > WEB_CHAT_LIMITIATION) {
 				break;
 			}
 			StrategyQueryStockBean bean = list.get(i);
@@ -192,7 +191,7 @@ public class GpphbServlet extends HttpServlet {
 					.append("<a href=\"http://m.quote.eastmoney.com/stock,"
 							+ bean.getStockId() + ".shtml\">")
 					.append(bean.getName()).append("</a>").append(" ")
-					//.append(bean.getDqj()).append(" ")
+					// .append(bean.getDqj()).append(" ")
 					.append(leijiPercentage + "%").append("\n");
 			outM += stockInfo;
 		}
