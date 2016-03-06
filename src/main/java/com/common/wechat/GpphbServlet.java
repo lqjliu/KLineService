@@ -7,30 +7,28 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import me.chanjar.weixin.common.exception.WxErrorException;
-import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.common.util.StringUtils;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
-import me.chanjar.weixin.mp.api.WxMpMessageHandler;
 import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.WxMpServiceImpl;
 import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.WxMpXmlOutMessage;
-import me.chanjar.weixin.mp.bean.WxMpXmlOutTextMessage;
 
 import org.apache.log4j.Logger;
 
 import com.bgj.exception.KLineException;
 import com.bgj.strategy.CommonStrategyMgrImpl;
+import com.bgj.strategy.StrategyMgr;
 import com.bgj.strategy.StrategyQueryStockBean;
+import com.bgj.strategy.zjxg.LXXDStrategyMgrImpl;
+import com.bgj.strategy.zjxg.ZJXGStrategyMgrImpl;
 import com.bgj.util.DateUtil;
 import com.bgj.util.MathUtil;
 import com.bgj.util.StockMarketUtil;
@@ -104,7 +102,7 @@ public class GpphbServlet extends HttpServlet {
 	}
 
 	private String getStockMessage(String inM, String outM) {
-		if (inM.indexOf("MRZT") >= 0 || inM.indexOf("YZZT") >=0 ) {
+		if (inM.indexOf("MRZT") >= 0 || inM.indexOf("YZZT") >= 0) {
 			String strategyName = inM.substring(0, 4);
 			Date date = new Date();
 			if (inM.length() > 4) {
@@ -120,8 +118,9 @@ public class GpphbServlet extends HttpServlet {
 				return cause;
 			}
 			try {
-				List<StrategyQueryStockBean> list = CommonStrategyMgrImpl
-						.getInstance().queryStocks(date, strategyName);
+				StrategyMgr strategyMgr = (StrategyMgr) getStrategyMgr(strategyName);
+				List<StrategyQueryStockBean> list = strategyMgr.queryStocks(
+						date, strategyName);
 				if (list.size() == 0) {
 					return "还未收市，本账号只提供收市后数据";
 				}
@@ -137,6 +136,19 @@ public class GpphbServlet extends HttpServlet {
 	}
 
 	private final static int WEB_CHAT_LIMITIATION = 21;
+
+	private StrategyMgr getStrategyMgr(String strategy) {
+		if (strategy.equals("MRZT") || strategy.equals("YZZT")) {
+			return CommonStrategyMgrImpl.getInstance();
+		}
+		if (strategy.equals("LXXD")) {
+			return LXXDStrategyMgrImpl.getInstance();
+		}
+		if (strategy.equals("ZJXG")) {
+			return ZJXGStrategyMgrImpl.getInstance();
+		}
+		return null;
+	}
 
 	private String convertWetChatMessage(List<StrategyQueryStockBean> list) {
 		String outM = "";
