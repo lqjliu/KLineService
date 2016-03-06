@@ -105,6 +105,7 @@ public class GpphbServlet extends HttpServlet {
 		if (inM.indexOf("MRZT") >= 0 || inM.indexOf("YZZT") >= 0
 				|| inM.indexOf("LSXG") >= 0 || inM.indexOf("LXXD") >= 0) {
 			String strategyName = inM.substring(0, 4);
+			logger.info("strategyName = " + strategyName);
 			Date date = new Date();
 			if (inM.length() > 4) {
 				String sDate = inM.substring(4).trim();
