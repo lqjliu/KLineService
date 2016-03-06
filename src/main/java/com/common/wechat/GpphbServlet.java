@@ -192,7 +192,7 @@ public class GpphbServlet extends HttpServlet {
 					.append("<a href=\"http://m.quote.eastmoney.com/stock,"
 							+ bean.getStockId() + ".shtml\">")
 					.append(bean.getName()).append("</a>").append(" ")
-					.append(bean.getDqj()).append(" ")
+					//.append(bean.getDqj()).append(" ")
 					.append(leijiPercentage + "%").append("\n");
 			outM += stockInfo;
 		}
