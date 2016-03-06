@@ -136,10 +136,9 @@ public class GpphbServlet extends HttpServlet {
 	}
 
 	private String getStockMessage(String inM, String outM) {
-		if (inM.indexOf("MRZT") == 0) {
+		if (inM.indexOf("MRZT") >= 0) {
 			Date date = new Date();
 			if (inM.length() > 4) {
-				boolean invalidDate = false;
 				String sDate = inM.substring(4).trim();
 				try {
 					date = DateUtil.parseDay(sDate);
@@ -159,7 +158,7 @@ public class GpphbServlet extends HttpServlet {
 				}
 				outM = convertWetChatMessage(list);
 				String header = "涨停榜(" + DateUtil.formatDay(date) + "):\n";
-				header = "代码 名称 当日价 累计涨幅\n";
+				header += "代码 名称 当日价 累计涨幅\n";
 				outM = header + outM;
 			} catch (KLineException e) {
 				logger.error("Read Stock throw exception:", e);
