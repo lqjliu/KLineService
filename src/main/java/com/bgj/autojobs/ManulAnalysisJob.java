@@ -84,11 +84,11 @@ public class ManulAnalysisJob implements Runnable {
 				}
 
 
-				EventRecorder.recordEvent(ManulAnalysisJob.class,
-						"Start to analyse MRZT");
-				MRZTDataAnalyst.analyse(today);
-				EventRecorder.recordEvent(ManulAnalysisJob.class,
-						"Finish to analyse MRZT");
+//				EventRecorder.recordEvent(ManulAnalysisJob.class,
+//						"Start to analyse MRZT");
+//				MRZTDataAnalyst.analyse(today);
+//				EventRecorder.recordEvent(ManulAnalysisJob.class,
+//						"Finish to analyse MRZT");
 
 				EventRecorder.recordEvent(ManulAnalysisJob.class,
 						"Start to analyse YZZT");
@@ -96,17 +96,17 @@ public class ManulAnalysisJob implements Runnable {
 				EventRecorder.recordEvent(ManulAnalysisJob.class,
 						"Finish to analyse YZZT");
 
-				EventRecorder.recordEvent(ManulAnalysisJob.class,
-						"Start to analyse LXXD");
-				LXXDDataAnalyst.analyse(today);
-				EventRecorder.recordEvent(ManulAnalysisJob.class,
-						"Finish to analyse LXXD");
-
-				EventRecorder.recordEvent(ManulAnalysisJob.class,
-						"Start to analyse ZJXG");
-				ZJXGDataAnalyst.analyse(today);
-				EventRecorder.recordEvent(ManulAnalysisJob.class,
-						"Finish to analyse ZJXG");
+//				EventRecorder.recordEvent(ManulAnalysisJob.class,
+//						"Start to analyse LXXD");
+//				LXXDDataAnalyst.analyse(today);
+//				EventRecorder.recordEvent(ManulAnalysisJob.class,
+//						"Finish to analyse LXXD");
+//
+//				EventRecorder.recordEvent(ManulAnalysisJob.class,
+//						"Start to analyse ZJXG");
+//				ZJXGDataAnalyst.analyse(today);
+//				EventRecorder.recordEvent(ManulAnalysisJob.class,
+//						"Finish to analyse ZJXG");
 
 				EventRecorder.recordEvent(ManulAnalysisJob.class,
 						"Finish to analysis " + today + " data");
