@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -101,6 +102,22 @@ public class GpphbServlet extends HttpServlet {
 		return;
 	}
 
+	private static String getStrateName(String strateName) {
+		if (strateName.equals("MRZT")) {
+			return "每日涨停";
+		}
+		if (strateName.equals("YZZT")) {
+			return "一字涨停";
+		}
+		if (strateName.equals("LSXG")) {
+			return "最近新高";
+		}
+		if (strateName.equals("LXXD")) {
+			return "连续下跌";
+		}
+		return "";
+	}
+
 	private String getStockMessage(String inM, String outM) {
 		if (inM.indexOf("MRZT") >= 0 || inM.indexOf("YZZT") >= 0
 				|| inM.indexOf("LSXG") >= 0 || inM.indexOf("LXXD") >= 0) {
@@ -119,12 +136,15 @@ public class GpphbServlet extends HttpServlet {
 			if (cause != null) {
 				return cause;
 			}
+			if (isMarketAfterAfternoonClosing(new Date())) {
+				return "还未收市，本账号只提供收市后数据";
+			}
 			try {
 				StrategyMgr strategyMgr = (StrategyMgr) getStrategyMgr(strategyName);
 				List<StrategyQueryStockBean> list = strategyMgr.queryStocks(
 						date, strategyName);
 				if (list.size() == 0) {
-					return "还未收市，本账号只提供收市后数据";
+					return "今天没有" + getStrateName(strategyName) + "数据";
 				}
 				outM = convertWetChatMessage(list);
 				String header = "涨停榜(" + DateUtil.formatDay(date) + "):\n";
@@ -135,6 +155,21 @@ public class GpphbServlet extends HttpServlet {
 			}
 		}
 		return outM;
+	}
+
+	private static boolean isMarketAfterAfternoonClosing(Date currentTime) {
+		Date afternoonClosingTime = getCentainTime(15, 0);
+		return currentTime.equals(afternoonClosingTime)
+				|| currentTime.after(afternoonClosingTime);
+	}
+
+	private static Date getCentainTime(int hour, int minute) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, hour);
+		calendar.set(Calendar.MINUTE, minute);
+		calendar.set(Calendar.SECOND, 0);
+		Date result = calendar.getTime();
+		return result;
 	}
 
 	private final static int WEB_CHAT_LIMITIATION = 21;
