@@ -96,7 +96,6 @@ public class GpphbServlet extends HttpServlet {
 					.content(outM).fromUser(inMessage.getToUserName())
 					.toUser(inMessage.getFromUserName()).build();
 			response.getWriter().write(outMessage.toXml());
-			response.getWriter().write(outMessage.toXml());
 			return;
 		}
 		response.getWriter().println("不可识别的加密类型");
