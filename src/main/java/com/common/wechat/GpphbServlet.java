@@ -159,11 +159,7 @@ public class GpphbServlet extends HttpServlet {
 
 	private static boolean isBeforeMarketAfternoonClosing(Date currentTime) {
 		Date afternoonClosingTime = getCentainTime(15, 0);
-
-		logger.info("currentTime = " + currentTime);
-		logger.info("afternoonClosingTime = " + afternoonClosingTime);
 		boolean result = currentTime.before(afternoonClosingTime);
-		logger.info("Result = " + result);
 		return result;
 	}
 
