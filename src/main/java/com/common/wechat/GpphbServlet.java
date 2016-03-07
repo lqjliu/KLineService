@@ -147,7 +147,8 @@ public class GpphbServlet extends HttpServlet {
 					return "今天没有" + getStrateName(strategyName) + "数据";
 				}
 				outM = convertWetChatMessage(list);
-				String header = "涨停榜(" + DateUtil.formatDay(date) + "):\n";
+				String header = getStrateName(strategyName) + "("
+						+ DateUtil.formatDay(date) + "):\n";
 				header += "代码 名称 当日价 累计涨幅\n";
 				outM = header + outM;
 			} catch (KLineException e) {
