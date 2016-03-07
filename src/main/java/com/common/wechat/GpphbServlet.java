@@ -136,7 +136,7 @@ public class GpphbServlet extends HttpServlet {
 			if (cause != null) {
 				return cause;
 			}
-			if (!isMarketAfterAfternoonClosing(new Date())) {
+			if (!isMarketAfterAfternoonClosing(date)) {
 				return "还未收市，本账号只提供收市后数据";
 			}
 			try {
