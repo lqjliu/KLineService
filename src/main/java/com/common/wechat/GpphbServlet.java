@@ -136,7 +136,7 @@ public class GpphbServlet extends HttpServlet {
 			if (cause != null) {
 				return cause;
 			}
-			if (!isMarketAfterAfternoonClosing(date)) {
+			if (isBeforeMarketAfternoonClosing(date)) {
 				return "还未收市，本账号只提供收市后数据";
 			}
 			try {
@@ -157,10 +157,14 @@ public class GpphbServlet extends HttpServlet {
 		return outM;
 	}
 
-	private static boolean isMarketAfterAfternoonClosing(Date currentTime) {
+	private static boolean isBeforeMarketAfternoonClosing(Date currentTime) {
 		Date afternoonClosingTime = getCentainTime(15, 0);
-		return currentTime.equals(afternoonClosingTime)
-				|| currentTime.after(afternoonClosingTime);
+
+		logger.info("currentTime = " + currentTime);
+		logger.info("afternoonClosingTime = " + afternoonClosingTime);
+		boolean result = currentTime.before(afternoonClosingTime);
+		logger.info("Result = " + result);
+		return result;
 	}
 
 	private static Date getCentainTime(int hour, int minute) {
