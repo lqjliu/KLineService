@@ -161,13 +161,14 @@ public class GpphbServlet extends HttpServlet {
 				logger.error("Read Stock throw exception:", e);
 			}
 		} else {
-			result = "伙计,不知道你要干嘛,请确认你输的的是\"策略拼音缩写 日期\",当前支持如下策略\n"
+			result = "伙计,不知道你要干嘛,请确认你输的的是\"策略拼音缩写 日期\",当前支持如下策略(策略名称:拼音缩写)\n"
 					+ StrategyConfiguration.getInstance().getStrategyDes();
 		}
 		return result;
 	}
 
-	private static boolean isBeforeMarketAfternoonClosing(Date currentTime) {
+	private static boolean isBeforeMarketAfternoonClosing() {
+		Date currentTime = new Date();
 		Date afternoonClosingTime = getCentainTime(15, 0);
 		boolean result = currentTime.before(afternoonClosingTime);
 		return result;
