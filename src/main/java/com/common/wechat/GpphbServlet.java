@@ -138,7 +138,7 @@ public class GpphbServlet extends HttpServlet {
 			if (cause != null) {
 				return cause;
 			}
-			if (DateUtil.isToday(date) && isBeforeMarketAfternoonClosing(date)) {
+			if (DateUtil.isToday(date) && isBeforeMarketAfternoonClosing()) {
 				return "还未收市，本账号只提供收市后数据";
 			}
 			try {
