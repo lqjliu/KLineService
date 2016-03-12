@@ -31,13 +31,15 @@ public class StockMarketUtil {
 		String holidayName = (String) holidays.get(sDate);
 		String result = null;
 		if (holidayName != null) {
-			result = AppExceptionKeys.TODAY_MARKET_REST_FOR + holidayName;
+			result = "ä»Šå¤©" + holidayName + "ä¼‘å¸‚,æ²¡æœ‰æ•°æ®";
 		} else if (isWeekend(date)) {
-			result = AppExceptionKeys.TODAY_MARKET_REST_FOR_WEEKEND;
+			result = "ä»Šå¤©å‘¨æœ«ä¼‘å¸‚,æ²¡æœ‰æ•°æ®";
 		}
 		return result;
 	}
 
+	
+	
 	public static boolean isMarketOpen(Date date) {
 		DateFormat dateFormat = new SimpleDateFormat("MM-dd");
 		String sDate = dateFormat.format(date);
@@ -64,13 +66,13 @@ public class StockMarketUtil {
 		Date currentTime = Calendar.getInstance().getTime();
 		String result = null;
 		if (isMarketBeforeMorningOpenning(currentTime)) {
-			result = "ÏÖÔÚÉĞÎ´¿ªÊĞ";
+			result = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½ï¿½ï¿½";
 		}
 		if (isMarketNoonClose(currentTime)) {
-			result = "ÏÖÔÚÎç¼äĞİÊĞ";
+			result = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½";
 		}
 		if (isMarketAfterAfternoonClosing(currentTime)) {
-			result = "ÏÖÔÚÒÑ±ÕÊĞ";
+			result = "ï¿½ï¿½ï¿½ï¿½ï¿½Ñ±ï¿½ï¿½ï¿½";
 		}
 		return result;
 	}
@@ -199,7 +201,7 @@ public class StockMarketUtil {
 			logger.info(cause);
 		}
 		if (cause != null) {
-			String message = "×Ô¶¯½»Ò×¼à¿ØÒÑ¿ªÆô£¬ " + cause;
+			String message = "ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½×¼ï¿½ï¿½ï¿½Ñ¿ï¿½ï¿½ï¿½ï¿½ï¿½ " + cause;
 			result = true;
 		}
 		return result;
@@ -209,7 +211,7 @@ public class StockMarketUtil {
 		boolean result = false;
 		String cause = getCloseCause();
 		if (cause != null) {
-			String message = "×Ô¶¯½»Ò×¼à¿ØÒÑ¿ªÆô£¬ " + cause;
+			String message = "ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½×¼ï¿½ï¿½ï¿½Ñ¿ï¿½ï¿½ï¿½ï¿½ï¿½ " + cause;
 			result = true;
 		}
 		return result;
