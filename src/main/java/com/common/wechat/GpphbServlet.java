@@ -109,9 +109,14 @@ public class GpphbServlet extends HttpServlet {
 				String sDate = inM.substring(abbre.length()).trim();
 				if (sDate.indexOf(" ") > 0) {
 					String sPage = sDate.substring(sDate.indexOf(" ")).trim();
-					page = Integer.parseInt(sPage);
+					try {
+						page = Integer.parseInt(sPage);
+					} catch (NumberFormatException ex) {
+						return "页码格式不对， 请重输";
+					}
 					sDate = sDate.substring(0, sDate.indexOf(" "));
 				}
+
 				try {
 					date = DateUtil.parseDay(sDate);
 				} catch (RuntimeException ex) {
@@ -179,6 +184,10 @@ public class GpphbServlet extends HttpServlet {
 				pageCount++;
 			}
 		}
+		if (page >= pageCount) {
+			return "这个策略在" + DateUtil.formatDay(date) + "没有第" + page + "页数据";
+		}
+
 		int currentNumber = list.size();
 		if (pageCount > 1) {
 			if ((page + 1) < pageCount) {
