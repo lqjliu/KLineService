@@ -141,11 +141,6 @@ public class GpphbServlet extends HttpServlet {
 									.getStrategyBean(abbre).getName() + "数据";
 				}
 				result = convertWetChatMessage(list, page, abbre, date);
-				String header = StrategyConfiguration.getInstance()
-						.getStrategyBean(abbre).getName()
-						+ "(" + DateUtil.formatDay(date) + "):\n";
-				header += "代码 名称 当日价 累计涨幅\n";
-				result = header + result;
 			} catch (KLineException e) {
 				logger.error("Read Stock throw exception:", e);
 			}
@@ -214,6 +209,12 @@ public class GpphbServlet extends HttpServlet {
 					.append(leijiPercentage + "%").append("\n");
 			outM += stockInfo;
 		}
+		String header = StrategyConfiguration.getInstance()
+				.getStrategyBean(strategy).getName()
+				+ "(" + DateUtil.formatDay(date) + "):\n";
+		header += "代码 名称 当日价 累计涨幅\n";
+		outM = header + outM;
+
 		if ((page + 1) < pageCount) {
 			outM += ("未完待续，请求下一页请输入:\n" + strategy + " "
 					+ DateUtil.formatDay(date) + " " + (page + 1));
