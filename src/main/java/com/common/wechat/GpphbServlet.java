@@ -1,7 +1,6 @@
 package com.common.wechat;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -9,10 +8,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -44,21 +41,6 @@ public class GpphbServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static final int INPUT_BUF_SIZE = 512;
 	private static Logger logger = Logger.getLogger(GpphbServlet.class);
-	private static Map<String, String> STRATEGY_MRG = new HashMap<String, String>();
-	private static Map<String, String> STRATEGY_NAME = new HashMap<String, String>();
-
-	static {
-		STRATEGY_MRG.put("MRZT", "com.bgj.strategy.CommonStrategyMgrImpl");
-		STRATEGY_MRG.put("YZZT", "com.bgj.strategy.CommonStrategyMgrImpl");
-		STRATEGY_MRG.put("LXXD", "com.bgj.strategy.zjxg.LXXDStrategyMgrImpl");
-		STRATEGY_MRG.put("LSXG", "com.bgj.strategy.zjxg.ZJXGStrategyMgrImpl");
-
-		STRATEGY_NAME.put("MRZT", "每日涨停");
-		STRATEGY_NAME.put("YZZT", "一字涨停");
-		STRATEGY_NAME.put("LXXD", "连续下跌");
-		STRATEGY_NAME.put("LSXG", "历史新高");
-
-	}
 
 	protected WxMpConfigStorage wxMpConfigStorage;
 	protected WxMpService wxMpService;
@@ -116,18 +98,20 @@ public class GpphbServlet extends HttpServlet {
 		return;
 	}
 
-	private static String getStrateName(String strateName) {
-		return STRATEGY_NAME.get(strateName);
-	}
-
 	private String getStockMessage(String inM) {
 		String result = "";
 		if (StrategyConfiguration.getInstance().isSupportStrategy(inM)) {
 			String abbre = StrategyConfiguration.getInstance()
 					.getSupportStrategyAbbre(inM);
 			Date date = new Date();
+			int page = 0;
 			if (inM.length() > abbre.length()) {
 				String sDate = inM.substring(abbre.length()).trim();
+				if (sDate.indexOf(" ") > 0) {
+					String sPage = sDate.substring(sDate.indexOf(" ")).trim();
+					page = Integer.parseInt(sPage);
+					sDate = sDate.substring(0, sDate.indexOf(" "));
+				}
 				try {
 					date = DateUtil.parseDay(sDate);
 				} catch (RuntimeException ex) {
@@ -151,7 +135,7 @@ public class GpphbServlet extends HttpServlet {
 							+ StrategyConfiguration.getInstance()
 									.getStrategyBean(abbre).getName() + "数据";
 				}
-				result = convertWetChatMessage(list);
+				result = convertWetChatMessage(list, page, abbre, date);
 				String header = StrategyConfiguration.getInstance()
 						.getStrategyBean(abbre).getName()
 						+ "(" + DateUtil.formatDay(date) + "):\n";
@@ -183,14 +167,26 @@ public class GpphbServlet extends HttpServlet {
 		return result;
 	}
 
-	private final static int WEB_CHAT_LIMITIATION = 21;
+	private final static int WEB_CHAT_LIMITIATION = 20;
 
-	private String convertWetChatMessage(List<StrategyQueryStockBean> list) {
+	private String convertWetChatMessage(List<StrategyQueryStockBean> list,
+			int page, String strategy, Date date) {
 		String outM = "";
-		for (int i = 0; i < list.size(); i++) {
-			if (i > WEB_CHAT_LIMITIATION) {
-				break;
+		int pageCount = 1;
+		if (list.size() > WEB_CHAT_LIMITIATION) {
+			pageCount = list.size() / WEB_CHAT_LIMITIATION;
+			if (list.size() % WEB_CHAT_LIMITIATION > 0) {
+				pageCount++;
 			}
+		}
+		int currentNumber = list.size();
+		if (pageCount > 1) {
+			if ((page + 1) < pageCount) {
+				currentNumber = WEB_CHAT_LIMITIATION * (page + 1);
+			}
+		}
+
+		for (int i = page * WEB_CHAT_LIMITIATION; i < currentNumber; i++) {
 			StrategyQueryStockBean bean = list.get(i);
 			// http://m.money.163.com/stock/0600036.html
 			// http://m.quote.eastmoney.com/stock,600162.shtml
@@ -208,6 +204,10 @@ public class GpphbServlet extends HttpServlet {
 					.append(bean.getName()).append("</a>").append(" ")
 					.append(leijiPercentage + "%").append("\n");
 			outM += stockInfo;
+		}
+		if ((page + 1) < pageCount) {
+			outM += ("未完待续，请求下一页请输入:\n" + strategy + " "
+					+ DateUtil.formatDay(date) + " " + (page + 1));
 		}
 		return outM;
 	}
