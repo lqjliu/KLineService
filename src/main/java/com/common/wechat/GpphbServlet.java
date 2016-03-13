@@ -99,6 +99,8 @@ public class GpphbServlet extends HttpServlet {
 	}
 
 	private String getStockMessage(String inM) {
+		logger.info("inM = " + inM);
+		
 		String result = "";
 		if (StrategyConfiguration.getInstance().isSupportStrategy(inM)) {
 			String abbre = StrategyConfiguration.getInstance()
