@@ -105,17 +105,29 @@ public class GpphbServlet extends HttpServlet {
 
 	private String getEventMessage(String eventKey) {
 		String result = "Button Testing";
-		if (eventKey.equals("MENU_ZJJYRZT")) {
-			return getStockMessage("MRZT "
-					+ DateUtil.formatDay(DateUtil.getLatestMarketCloseDay()));
+		if (eventKey.indexOf("MRZT") == 0) {
+			if (eventKey.indexOf("ZJJYRZT") > 0) {
+				return getStockMessage("MRZT "
+						+ DateUtil
+								.formatDay(DateUtil.getLatestMarketCloseDay()));
+			}
+			if (eventKey.indexOf("ZJQYJYRZT") > 0) {
+				return getStockMessage("MRZT "
+						+ DateUtil.formatDay(DateUtil.getPreviousMarketOpenDay(
+								DateUtil.getLatestMarketCloseDay(), 1)));
+			}
+			if (eventKey.indexOf("GDZT") > 0) {
+				return "请输入 \"MRZT 日期\"请求更多涨停数据， 日期格式yyyy-MM-dd";
+			}
 		}
-		if (eventKey.equals("MENU_ZJQYJYRZT")) {
-			return getStockMessage("MRZT "
-					+ DateUtil.formatDay(DateUtil.getPreviousMarketOpenDay(
-							DateUtil.getLatestMarketCloseDay(), 1)));
-		}
-		if (eventKey.equals("MENU_ZJQYJYRZT")) {
-			return "请输入 \"MRZT 日期\"请求更多涨停数据， 日期格式yyyy-MM-dd";
+		if (eventKey.indexOf("GDBD") == 0) {
+			String abbre = eventKey.substring(eventKey.indexOf("_") + 1);
+			return "请输入 \""
+					+ abbre
+					+ " 日期\"请求"
+					+ StrategyConfiguration.getInstance()
+							.getStrategyBean(abbre).getName()
+					+ "数据， 日期格式yyyy-MM-dd";
 		}
 
 		return result;
