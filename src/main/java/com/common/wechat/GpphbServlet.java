@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -40,7 +39,7 @@ public class GpphbServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 	public static final int INPUT_BUF_SIZE = 512;
-	private static Logger logger = Logger.getLogger(GpphbServlet.class);
+	public static Logger logger = Logger.getLogger(GpphbServlet.class);
 
 	protected WxMpConfigStorage wxMpConfigStorage;
 	protected WxMpService wxMpService;
@@ -85,8 +84,14 @@ public class GpphbServlet extends HttpServlet {
 		if ("raw".equals(encryptType)) {
 			WxMpXmlMessage inMessage = WxMpXmlMessage.fromXml(request
 					.getInputStream());
-			String inM = inMessage.getContent();
-			String outM = getStockMessage(inM);
+			String outM = "";
+			if (inMessage.getMsgType().equals("text")) {
+				String inM = inMessage.getContent();
+				outM = getStockMessage(inM);
+			} else if (inMessage.getMsgType().equals("event")
+					&& inMessage.getEvent().equals("CLICK")) {
+				outM = getEventMessage(inMessage.getEventKey());
+			}
 
 			WxMpXmlOutMessage outMessage = WxMpXmlOutMessage.TEXT()
 					.content(outM).fromUser(inMessage.getToUserName())
@@ -98,9 +103,27 @@ public class GpphbServlet extends HttpServlet {
 		return;
 	}
 
+	private String getEventMessage(String eventKey) {
+		String result = "Button Testing";
+		if (eventKey.equals("MENU_ZJJYRZT")) {
+			return getStockMessage("MRZT "
+					+ DateUtil.formatDay(DateUtil.getLatestMarketCloseDay()));
+		}
+		if (eventKey.equals("MENU_ZJQYJYRZT")) {
+			return getStockMessage("MRZT "
+					+ DateUtil.formatDay(DateUtil.getPreviousMarketOpenDay(
+							DateUtil.getLatestMarketCloseDay(), 1)));
+		}
+		if (eventKey.equals("MENU_ZJQYJYRZT")) {
+			return "请输入 \"MRZT 日期\"请求更多涨停数据， 日期格式yyyy-MM-dd";
+		}
+
+		return result;
+	}
+
 	private String getStockMessage(String inM) {
 		logger.info("inM = " + inM);
-		
+
 		String result = "";
 		if (StrategyConfiguration.getInstance().isSupportStrategy(inM)) {
 			String abbre = StrategyConfiguration.getInstance()
@@ -129,7 +152,8 @@ public class GpphbServlet extends HttpServlet {
 			if (cause != null) {
 				return cause;
 			}
-			if (DateUtil.isToday(date) && isBeforeMarketAfternoonClosing()) {
+			if (DateUtil.isToday(date)
+					&& StockMarketUtil.isBeforeMarketAfternoonClosing()) {
 				return "还未收市，本账号只提供收市后数据";
 			}
 			try {
@@ -150,26 +174,6 @@ public class GpphbServlet extends HttpServlet {
 			result = "伙计,不知道你要干嘛,请确认你输的的是\"策略拼音缩写 日期\",当前支持如下策略(策略名称:拼音缩写)\n"
 					+ StrategyConfiguration.getInstance().getStrategyDes();
 		}
-		return result;
-	}
-
-	private static boolean isBeforeMarketAfternoonClosing() {
-		Date currentTime = new Date();
-		Date afternoonClosingTime = getCentainTime(15, 3);
-		logger.info("currentTime = " + currentTime);
-		logger.info("afternoonClosingTime = " + afternoonClosingTime);
-		boolean result = currentTime.before(afternoonClosingTime);
-		logger.info("result = " + result);
-
-		return result;
-	}
-
-	private static Date getCentainTime(int hour, int minute) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.HOUR_OF_DAY, hour);
-		calendar.set(Calendar.MINUTE, minute);
-		calendar.set(Calendar.SECOND, 0);
-		Date result = calendar.getTime();
 		return result;
 	}
 

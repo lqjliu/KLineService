@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 
 import com.bgj.exception.AppExceptionKeys;
 import com.bgj.stockquotes.StockQuotesBean;
+import com.common.wechat.GpphbServlet;
 
 public class StockMarketUtil {
 	private static Logger logger = Logger.getLogger(StockMarketUtil.class);
@@ -235,5 +236,16 @@ public class StockMarketUtil {
 	public static void main(String[] args) {
 		String cause = StockMarketUtil.getMarketRestCause();
 		System.out.println("cause = " + cause);
+	}
+
+	public static boolean isBeforeMarketAfternoonClosing() {
+		Date currentTime = new Date();
+		Date afternoonClosingTime = DateUtil.getCentainTime(15, 3);
+		GpphbServlet.logger.info("currentTime = " + currentTime);
+		GpphbServlet.logger.info("afternoonClosingTime = " + afternoonClosingTime);
+		boolean result = currentTime.before(afternoonClosingTime);
+		GpphbServlet.logger.info("result = " + result);
+	
+		return result;
 	}
 }
