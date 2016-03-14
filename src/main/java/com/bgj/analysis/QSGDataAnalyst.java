@@ -15,8 +15,8 @@ import com.bgj.util.DateUtil;
 public class QSGDataAnalyst {
 	public static void analyse(Date date) throws KLineException {
 		String strategyName = "QSG";
-		int days = 2;
-		int percentage = 20;
+		int days = 1;
+		int percentage = 16;
 		String day = DateUtil.formatDay(date);
 		String previousDay = DateUtil.formatDay(DateUtil
 				.getPreviousMarketOpenDay(date, days));
