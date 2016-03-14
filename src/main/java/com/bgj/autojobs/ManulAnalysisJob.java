@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 
 import com.bgj.analysis.LXXDDataAnalyst;
 import com.bgj.analysis.MRZTDataAnalyst;
-import com.bgj.analysis.StockCurrentPriceHolder;
+import com.bgj.analysis.QSGDataAnalyst;
 import com.bgj.analysis.YZZTDataAnalyst;
 import com.bgj.analysis.ZJXGDataAnalyst;
 import com.bgj.exception.KLineException;
@@ -54,11 +54,16 @@ public class ManulAnalysisJob implements Runnable {
 
 		String sbeginDate = args[2];
 		String sendDate = args[3];
-		analyzeHistoryData(sbeginDate, sendDate);
+		String strategy = null;
+		if (args.length == 5) {
+			strategy = args[4];
+		}
+		analyzeHistoryData(sbeginDate, sendDate, strategy);
 
 	}
 
-	public static void analyzeHistoryData(String sbeginDate, String sendDate) {
+	public static void analyzeHistoryData(String sbeginDate, String sendDate,
+			String strategy) {
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
 		Date beginDate = null;
 		Date endDate = null;
@@ -82,32 +87,23 @@ public class ManulAnalysisJob implements Runnable {
 					today = DateUtil.getNextDay(today);
 					continue;
 				}
-
-
-				EventRecorder.recordEvent(ManulAnalysisJob.class,
-						"Start to analyse MRZT");
-				MRZTDataAnalyst.analyse(today);
-				EventRecorder.recordEvent(ManulAnalysisJob.class,
-						"Finish to analyse MRZT");
-
-				EventRecorder.recordEvent(ManulAnalysisJob.class,
-						"Start to analyse YZZT");
-				YZZTDataAnalyst.analyse(today);
-				EventRecorder.recordEvent(ManulAnalysisJob.class,
-						"Finish to analyse YZZT");
-
-				EventRecorder.recordEvent(ManulAnalysisJob.class,
-						"Start to analyse LXXD");
-				LXXDDataAnalyst.analyse(today);
-				EventRecorder.recordEvent(ManulAnalysisJob.class,
-						"Finish to analyse LXXD");
-
-				EventRecorder.recordEvent(ManulAnalysisJob.class,
-						"Start to analyse ZJXG");
-				ZJXGDataAnalyst.analyse(today);
-				EventRecorder.recordEvent(ManulAnalysisJob.class,
-						"Finish to analyse ZJXG");
-
+				if (strategy == null) {
+					analyzeMRZT(today);
+					analyseYZZT(today);
+					analyseLXXD(today);
+					analyseZJXG(today);
+					analyseQSG(today);
+				} else if (strategy.equals("QSG")) {
+					analyseQSG(today);
+				} else if (strategy.equals("MRZT")) {
+					analyzeMRZT(today);
+				} else if (strategy.equals("YZZT")) {
+					analyseYZZT(today);
+				} else if (strategy.equals("LXXD")) {
+					analyseLXXD(today);
+				} else if (strategy.equals("ZJXG")) {
+					analyseZJXG(today);
+				}
 				EventRecorder.recordEvent(ManulAnalysisJob.class,
 						"Finish to analysis " + today + " data");
 
@@ -119,7 +115,47 @@ public class ManulAnalysisJob implements Runnable {
 		}
 	}
 
+	private static void analyseQSG(Date today) throws KLineException {
+		EventRecorder.recordEvent(ManulAnalysisJob.class,
+				"Start to analyse QSG");
+		QSGDataAnalyst.analyse(today);
+		EventRecorder.recordEvent(ManulAnalysisJob.class,
+				"Finish to analyse QSG");
+	}
+
+	private static void analyseZJXG(Date today) throws KLineException {
+		EventRecorder.recordEvent(ManulAnalysisJob.class,
+				"Start to analyse ZJXG");
+		ZJXGDataAnalyst.analyse(today);
+		EventRecorder.recordEvent(ManulAnalysisJob.class,
+				"Finish to analyse ZJXG");
+	}
+
+	private static void analyseLXXD(Date today) throws KLineException {
+		EventRecorder.recordEvent(ManulAnalysisJob.class,
+				"Start to analyse LXXD");
+		LXXDDataAnalyst.analyse(today);
+		EventRecorder.recordEvent(ManulAnalysisJob.class,
+				"Finish to analyse LXXD");
+	}
+
+	private static void analyseYZZT(Date today) throws KLineException {
+		EventRecorder.recordEvent(ManulAnalysisJob.class,
+				"Start to analyse YZZT");
+		YZZTDataAnalyst.analyse(today);
+		EventRecorder.recordEvent(ManulAnalysisJob.class,
+				"Finish to analyse YZZT");
+	}
+
+	private static void analyzeMRZT(Date today) throws KLineException {
+		EventRecorder.recordEvent(ManulAnalysisJob.class,
+				"Start to analyse MRZT");
+		MRZTDataAnalyst.analyse(today);
+		EventRecorder.recordEvent(ManulAnalysisJob.class,
+				"Finish to analyse MRZT");
+	}
+
 	public void run() {
-		ManulAnalysisJob.analyzeHistoryData(beginDate, endDate);
+		ManulAnalysisJob.analyzeHistoryData(beginDate, endDate, null);
 	}
 }
