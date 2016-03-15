@@ -9,6 +9,7 @@ import org.quartz.JobExecutionException;
 
 import com.bgj.analysis.LXXDDataAnalyst;
 import com.bgj.analysis.MRZTDataAnalyst;
+import com.bgj.analysis.QSGDataAnalyst;
 import com.bgj.analysis.StockCurrentPriceHolder;
 import com.bgj.analysis.YZZTDataAnalyst;
 import com.bgj.analysis.ZJXGDataAnalyst;
@@ -29,7 +30,8 @@ public class AutoCollectingAfterCloseJob implements Job {
 		NotificationMail notification = new NotificationMail();
 		EventRecorder.recordEvent(this.getClass(), "开始盘后处理");
 		if (StockMarketUtil.isMarketRest()) {
-			EventRecorder.recordEvent(this.getClass(), "今天假日休市,结束盘后处理");
+			EventRecorder.recordEvent(this.getClass(),
+					"今天假日休市,结束盘后处理");
 			return;
 		}
 		EventRecorder.recordEvent(this.getClass(), "Start to collect data");
@@ -65,6 +67,12 @@ public class AutoCollectingAfterCloseJob implements Job {
 			ZJXGDataAnalyst.analyse(today);
 			EventRecorder
 					.recordEvent(this.getClass(), "Finish to analyse ZJXG");
+			EventRecorder.recordEvent(ManulAnalysisJob.class,
+					"Start to analyse QSG");
+			QSGDataAnalyst.analyse(today);
+			EventRecorder.recordEvent(ManulAnalysisJob.class,
+					"Finish to analyse QSG");
+
 			notification.setSuccessful(true);
 		} catch (KLineException e) {
 			notification.setFailedCause(e);
@@ -80,13 +88,11 @@ public class AutoCollectingAfterCloseJob implements Job {
 		EventRecorder.recordEvent(this.getClass(), "结束盘后处理");
 	}
 
-
 	private void collectStockDailyInfo() {
 		Date now = new Date();
 		collectStockDailyInfo(now);
 	}
 
-	
 	private void collectStockDailyInfo(Date now) {
 		EventRecorder.recordEvent(this.getClass(), "开始收集收盘数据");
 		String today = DateUtil.formatDay(now);
@@ -125,7 +131,6 @@ public class AutoCollectingAfterCloseJob implements Job {
 		// System.out.println("db_url = " + db_url);
 		// ConnectionPool.setDBURL(db_url);
 
-		
 		String fulldbURL = "jdbc:mysql://"
 				+ "56cbfc6c26210.sh.cdb.myqcloud.com"
 				+ ":6971/bgj?user=bgj&password=KLine123&useUnicode=true&characterEncoding=UTF-8";
@@ -133,7 +138,6 @@ public class AutoCollectingAfterCloseJob implements Job {
 		ConnectionPool.setFULLDBURL(fulldbURL);
 		AutoCollectingAfterCloseJob job = new AutoCollectingAfterCloseJob();
 		job.collectStockDailyInfo();
-
 
 	}
 
