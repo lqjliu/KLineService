@@ -91,8 +91,12 @@ public class GpphbServlet extends HttpServlet {
 			} else if (inMessage.getMsgType().equals("event")
 					&& inMessage.getEvent().equals("CLICK")) {
 				outM = getEventMessage(inMessage.getEventKey());
-			} else {
-				System.out.println("inMessage = " + inMessage);
+			} else if (inMessage.getMsgType().equals("event")
+					&& inMessage.getEvent().equals("subscribe")) {
+				String welcome = "欢迎订阅股票榜中榜!\n"
+						+ "用户可以点击本公众账号的菜单获取常见股票榜单，如涨跌停榜，一字榜，历史新高等。\n"
+						+ "更为重要重要的是，用户可以随时查阅历史榜单。";
+				outM = welcome;
 			}
 
 			WxMpXmlOutMessage outMessage = WxMpXmlOutMessage.TEXT()
