@@ -91,6 +91,8 @@ public class GpphbServlet extends HttpServlet {
 			} else if (inMessage.getMsgType().equals("event")
 					&& inMessage.getEvent().equals("CLICK")) {
 				outM = getEventMessage(inMessage.getEventKey());
+			} else {
+				System.out.println("inMessage = " + inMessage);
 			}
 
 			WxMpXmlOutMessage outMessage = WxMpXmlOutMessage.TEXT()
