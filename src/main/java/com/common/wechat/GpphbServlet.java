@@ -93,8 +93,8 @@ public class GpphbServlet extends HttpServlet {
 				outM = getEventMessage(inMessage.getEventKey());
 			} else if (inMessage.getMsgType().equals("event")
 					&& inMessage.getEvent().equals("subscribe")) {
-				String welcome = "欢迎订阅股票榜中榜!\n"
-						+ "用户可以点击本公众账号的菜单获取常见股票榜单，如涨跌停榜，一字榜，历史新高等。\n"
+				String welcome = "欢迎订阅股票榜中榜!\n\n"
+						+ "用户可以点击本公众账号的菜单获取常见股票榜单，如涨跌停榜，一字榜，历史新高等。\n\n"
 						+ "更为重要重要的是，用户可以随时查阅历史榜单。";
 				outM = welcome;
 			}
