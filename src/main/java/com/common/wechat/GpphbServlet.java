@@ -162,9 +162,13 @@ public class GpphbServlet extends HttpServlet {
 			if(currentCMD == null){
 				return "没有输过命令，会话未建立，请重新输入";
 			}else{
+				logger.info(inM);
 				String sNo = inM.substring(4);
 				try{
 					int pageNo = Integer.parseInt(sNo);
+					logger.info("pageNo = " + pageNo);
+					logger.info("currentCMD = " + currentCMD);
+					
 					inM = currentCMD + " " + pageNo;
 				}catch(NumberFormatException ex){
 					return "页码格式不对， 请重新输入";
