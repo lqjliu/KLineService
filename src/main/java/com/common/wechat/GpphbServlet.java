@@ -87,7 +87,7 @@ public class GpphbServlet extends HttpServlet {
 			logger.info("inMessage = " + inMessage);
 			String outM = "";
 			if (inMessage.getMsgType().equals("text")) {
-				
+
 				outM = getStockMessage(inMessage);
 
 			} else if (inMessage.getMsgType().equals("event")
@@ -157,25 +157,26 @@ public class GpphbServlet extends HttpServlet {
 		logger.info("inM = " + inM);
 
 		String result = "";
-		if(inM.toLowerCase().startsWith("page")){
-			String currentCMD = WebChatSession.getInstance().getSession(fromUserName);
-			if(currentCMD == null){
+		if (inM.toLowerCase().startsWith("page")) {
+			String currentCMD = WebChatSession.getInstance().getSession(
+					fromUserName);
+			if (currentCMD == null) {
 				return "没有输过命令，会话未建立，请重新输入";
-			}else{
+			} else {
 				logger.info(inM);
 				String sNo = inM.substring(4);
-				try{
+				try {
 					int pageNo = Integer.parseInt(sNo);
 					logger.info("pageNo = " + pageNo);
 					logger.info("currentCMD = " + currentCMD);
-					
+
 					inM = currentCMD + " " + pageNo;
-				}catch(NumberFormatException ex){
+				} catch (NumberFormatException ex) {
 					return "页码格式不对， 请重新输入";
 				}
 			}
 		}
-			
+
 		if (StrategyConfiguration.getInstance().isSupportStrategy(inM)) {
 			String abbre = StrategyConfiguration.getInstance()
 					.getSupportStrategyAbbre(inM);
@@ -218,7 +219,9 @@ public class GpphbServlet extends HttpServlet {
 									.getStrategyBean(abbre).getName() + "数据";
 				}
 				result = convertWetChatMessage(list, page, abbre, date);
-				WebChatSession.getInstance().putSession(fromUserName, inM);
+				if (page == 0) {
+					WebChatSession.getInstance().putSession(fromUserName, inM);
+				}
 			} catch (KLineException e) {
 				logger.error("Read Stock throw exception:", e);
 			}
