@@ -165,7 +165,7 @@ public class GpphbServlet extends HttpServlet {
 				String sNo = inM.substring(4);
 				try{
 					int pageNo = Integer.parseInt(sNo);
-					inM = currentCMD + " pageNo";
+					inM = currentCMD + " " + pageNo;
 				}catch(NumberFormatException ex){
 					return "页码格式不对， 请重新输入";
 				}
