@@ -84,6 +84,8 @@ public class GpphbServlet extends HttpServlet {
 		if ("raw".equals(encryptType)) {
 			WxMpXmlMessage inMessage = WxMpXmlMessage.fromXml(request
 					.getInputStream());
+			logger.info("inMessage = " + inMessage);
+			
 			String outM = "";
 			if (inMessage.getMsgType().equals("text")) {
 				String inM = inMessage.getContent();
