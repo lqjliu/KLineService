@@ -85,14 +85,14 @@ public class GpphbServlet extends HttpServlet {
 			WxMpXmlMessage inMessage = WxMpXmlMessage.fromXml(request
 					.getInputStream());
 			logger.info("inMessage = " + inMessage);
-			
 			String outM = "";
 			if (inMessage.getMsgType().equals("text")) {
-				String inM = inMessage.getContent();
-				outM = getStockMessage(inM);
+				
+				outM = getStockMessage(inMessage);
+
 			} else if (inMessage.getMsgType().equals("event")
 					&& inMessage.getEvent().equals("CLICK")) {
-				outM = getEventMessage(inMessage.getEventKey());
+				outM = getEventMessage(inMessage);
 			} else if (inMessage.getMsgType().equals("event")
 					&& inMessage.getEvent().equals("subscribe")) {
 				String welcome = "欢迎订阅股票榜中榜!\n\n"
@@ -111,18 +111,24 @@ public class GpphbServlet extends HttpServlet {
 		return;
 	}
 
-	private String getEventMessage(String eventKey) {
+	private String getEventMessage(WxMpXmlMessage inMessage) {
+		String eventKey = inMessage.getEventKey();
 		String result = "Button Testing";
 		if (eventKey.indexOf("MRZT") == 0) {
 			if (eventKey.indexOf("ZJJYRZT") > 0) {
-				return getStockMessage("MRZT "
-						+ DateUtil
-								.formatDay(DateUtil.getLatestMarketCloseDay()));
+				return getStockMessage(
+						"MRZT "
+								+ DateUtil.formatDay(DateUtil
+										.getLatestMarketCloseDay()),
+						inMessage.getFromUserName());
 			}
 			if (eventKey.indexOf("ZJQYJYRZT") > 0) {
-				return getStockMessage("MRZT "
-						+ DateUtil.formatDay(DateUtil.getPreviousMarketOpenDay(
-								DateUtil.getLatestMarketCloseDay(), 1)));
+				return getStockMessage(
+						"MRZT "
+								+ DateUtil.formatDay(DateUtil
+										.getPreviousMarketOpenDay(DateUtil
+												.getLatestMarketCloseDay(), 1)),
+						inMessage.getFromUserName());
 			}
 			if (eventKey.indexOf("GDZT") > 0) {
 				return "请输入 \"MRZT 日期\"请求更多涨停数据， 日期格式yyyy-MM-dd";
@@ -141,10 +147,31 @@ public class GpphbServlet extends HttpServlet {
 		return result;
 	}
 
-	private String getStockMessage(String inM) {
+	private String getStockMessage(WxMpXmlMessage inMessage) {
+		return getStockMessage(inMessage.getContent(),
+				inMessage.getFromUserName());
+	}
+
+	private String getStockMessage(String inM, String fromUserName) {
+
 		logger.info("inM = " + inM);
 
 		String result = "";
+		if(inM.toLowerCase().startsWith("page")){
+			String currentCMD = WebChatSession.getInstance().getSession(fromUserName);
+			if(currentCMD == null){
+				return "没有输过命令，会话未建立，请重新输入";
+			}else{
+				String sNo = inM.substring(4);
+				try{
+					int pageNo = Integer.parseInt(sNo);
+					inM = currentCMD + " pageNo";
+				}catch(NumberFormatException ex){
+					return "页码格式不对， 请重新输入";
+				}
+			}
+		}
+			
 		if (StrategyConfiguration.getInstance().isSupportStrategy(inM)) {
 			String abbre = StrategyConfiguration.getInstance()
 					.getSupportStrategyAbbre(inM);
@@ -187,6 +214,7 @@ public class GpphbServlet extends HttpServlet {
 									.getStrategyBean(abbre).getName() + "数据";
 				}
 				result = convertWetChatMessage(list, page, abbre, date);
+				WebChatSession.getInstance().putSession(fromUserName, inM);
 			} catch (KLineException e) {
 				logger.error("Read Stock throw exception:", e);
 			}
@@ -246,8 +274,9 @@ public class GpphbServlet extends HttpServlet {
 		outM = header + outM;
 
 		if ((page + 1) < pageCount) {
-			outM += ("未完待续，请求下一页请输入:\n" + strategy + " "
-					+ DateUtil.formatDay(date) + " " + (page + 1));
+			// outM += ("未完待续，请求下一页请输入:\n" + strategy + " "
+			// + DateUtil.formatDay(date) + " " + (page + 1));
+			outM += ("未完待续，请求下一页请输入:" + " page" + (page + 1));
 		}
 		return outM;
 	}
