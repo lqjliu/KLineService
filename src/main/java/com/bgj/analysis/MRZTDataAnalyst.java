@@ -15,7 +15,7 @@ import com.bgj.util.DateUtil;
 public class MRZTDataAnalyst {
 	public static void analyse(Date date) throws KLineException {
 		String strategyName = "MRZT";
-		String day = DateUtil.formatDay(date);
+		String day = DateUtil.formatDay15(date);
 		String sql = "SELECT * FROM stockdailyinfo WHERE zdf >= "
 				+ Constants.ZT_THRESHOLD + " AND highestPrice != lowestPrice and DATE like '" + day
 				+ " %' ORDER BY zdf DESC";
