@@ -10,10 +10,19 @@ public class DateUtil {
 		return df.format(date);
 	}
 
+	
 	public static String formatDay(Date date) {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		return df.format(date);
 	}
+	
+
+	public static String formatDay15(Date date) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd 15");
+		return df.format(date);
+	}
+	
+	
 
 	public static Date parseDay(String sDate) {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -150,9 +159,10 @@ public class DateUtil {
 	}
 
 	public static void main(String[] args) {
-		// Date now = new Date();
-		Date now = DateUtil.getDate(2014, 1, 14);
-		System.out.println(DateUtil.getPreviousMarketOpenDay(now, 5));
+		 Date now = new Date();
+		 System.out.println(DateUtil.formatDay15(now));
+//		Date now = DateUtil.getDate(2014, 1, 14);
+//		System.out.println(DateUtil.getPreviousMarketOpenDay(now, 5));
 
 	}
 
