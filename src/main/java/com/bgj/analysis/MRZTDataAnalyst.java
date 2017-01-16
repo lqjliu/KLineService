@@ -11,6 +11,7 @@ import com.bgj.dao.StockAnalysingAccessor;
 import com.bgj.exception.KLineException;
 import com.bgj.util.Constants;
 import com.bgj.util.DateUtil;
+import com.common.db.ConnectionPool;
 
 public class MRZTDataAnalyst {
 	public static void analyse(Date date) throws KLineException {
@@ -18,7 +19,8 @@ public class MRZTDataAnalyst {
 		String day = DateUtil.formatDay15(date);
 		String sql = "SELECT * FROM stockdailyinfo WHERE zdf >= "
 				+ Constants.ZT_THRESHOLD + " AND highestPrice != lowestPrice and DATE like '" + day
-				+ " %' ORDER BY zdf DESC";
+				+ "%' ORDER BY zdf DESC";
+		System.out.println("sql = " + sql);
 		List<StockdailyinfoVO> list = GhlhDAO.list(sql,
 				"com.bgj.dao.StockdailyinfoVO");
 		if (list != null && list.size() > 0) {
@@ -30,14 +32,14 @@ public class MRZTDataAnalyst {
 
 	public static void main(String[] args) {
 		Date now = new Date();
-//		try {
-//			//analyse(now);
-//		} catch (KLineException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		try {
+			analyse(now);
+		} catch (KLineException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		 analyseMultipleDay();
+//		 analyseMultipleDay();
 
 	}
 
