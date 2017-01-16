@@ -115,19 +115,43 @@ public class GpphbServlet extends HttpServlet {
 		String eventKey = inMessage.getEventKey();
 		String result = "Button Testing";
 		if (eventKey.indexOf("MRZT") == 0) {
-			if (eventKey.indexOf("ZJJYRZT") > 0) {
+			if (eventKey.indexOf("ZJZT") > 0) {
 				return getStockMessage(
 						"MRZT "
 								+ DateUtil.formatDay(DateUtil
 										.getLatestMarketCloseDay()),
 						inMessage.getFromUserName());
 			}
-			if (eventKey.indexOf("ZJQYJYRZT") > 0) {
+			if (eventKey.indexOf("ZJQYRZT") > 0) {
 				return getStockMessage(
 						"MRZT "
 								+ DateUtil.formatDay(DateUtil
 										.getPreviousMarketOpenDay(DateUtil
 												.getLatestMarketCloseDay(), 1)),
+						inMessage.getFromUserName());
+			}
+			if (eventKey.indexOf("ZJQLRZT") > 0) {
+				return getStockMessage(
+						"MRZT "
+								+ DateUtil.formatDay(DateUtil
+										.getPreviousMarketOpenDay(DateUtil
+												.getLatestMarketCloseDay(), 2)),
+						inMessage.getFromUserName());
+			}
+			if (eventKey.indexOf("ZJQSANRZT") > 0) {
+				return getStockMessage(
+						"MRZT "
+								+ DateUtil.formatDay(DateUtil
+										.getPreviousMarketOpenDay(DateUtil
+												.getLatestMarketCloseDay(), 3)),
+						inMessage.getFromUserName());
+			}
+			if (eventKey.indexOf("ZJQSIRZT") > 0) {
+				return getStockMessage(
+						"MRZT "
+								+ DateUtil.formatDay(DateUtil
+										.getPreviousMarketOpenDay(DateUtil
+												.getLatestMarketCloseDay(), 4)),
 						inMessage.getFromUserName());
 			}
 			if (eventKey.indexOf("GDZT") > 0) {
