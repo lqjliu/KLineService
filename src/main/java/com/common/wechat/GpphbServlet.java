@@ -184,14 +184,14 @@ public class GpphbServlet extends HttpServlet {
 		logger.info("inM = " + inM);
 
 		String result = "";
-		if (inM.toLowerCase().startsWith("page")) {
+		if (inM.toLowerCase().trim().startsWith("page")) {
 			String currentCMD = WebChatSession.getInstance().getSession(
 					fromUserName);
 			if (currentCMD == null) {
 				return "没有输过命令，会话未建立，请重新输入";
 			} else {
 				logger.info("pageCMD = " + inM);
-				String sNo = inM.substring(4);
+				String sNo = inM.trim().substring(4);
 				try {
 					int pageNo = Integer.parseInt(sNo);
 					logger.info("pageNo = " + pageNo);
