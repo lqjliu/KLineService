@@ -64,7 +64,10 @@ public class GpphbServlet extends HttpServlet {
 		String signature = request.getParameter("signature");
 		String nonce = request.getParameter("nonce");
 		String timestamp = request.getParameter("timestamp");
-
+		logger.info("signature = " + signature);
+		logger.info("nonce = " + nonce);
+		logger.info("timestamp = " + timestamp);
+		
 		if (!verifySignature(nonce, timestamp, signature)) {
 			response.getWriter().println("非法请求");
 			return;
@@ -318,6 +321,7 @@ public class GpphbServlet extends HttpServlet {
 		String token = wxMpConfigStorage.getToken();
 
 		list.add(token);
+		logger.info("token = " + token);
 		list.add(timestamp);
 		list.add(nonce);
 		Collections.sort(list);
