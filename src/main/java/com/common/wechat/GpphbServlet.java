@@ -199,6 +199,7 @@ public class GpphbServlet extends HttpServlet {
 
 					inM = currentCMD + " " + pageNo;
 				} catch (NumberFormatException ex) {
+					logger.info("format is right: sNo = " + sNo , ex);
 					return "页码格式不对， 请重新输入";
 				}
 			}
