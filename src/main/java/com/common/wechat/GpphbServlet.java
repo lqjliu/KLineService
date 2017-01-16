@@ -190,7 +190,7 @@ public class GpphbServlet extends HttpServlet {
 			if (currentCMD == null) {
 				return "没有输过命令，会话未建立，请重新输入";
 			} else {
-				logger.info(inM);
+				logger.info("pageCMD = " + inM);
 				String sNo = inM.substring(4);
 				try {
 					int pageNo = Integer.parseInt(sNo);
