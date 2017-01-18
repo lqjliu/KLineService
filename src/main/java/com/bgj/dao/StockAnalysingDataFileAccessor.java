@@ -97,13 +97,7 @@ public class StockAnalysingDataFileAccessor implements StockAnalysingAccessor {
 		}
 
 		assessLatestSPJ(result);
-//		Object[] arrays = result.toArray();
-//		Arrays.sort(arrays);
 		Collections.sort(result);
-//		result = new ArrayList<StrategyQueryStockBean>();
-//		for (int i = 0; i < arrays.length; i++) {
-//			result.add((StrategyQueryStockBean) arrays[i]);
-//		}
 		return result;
 	}
 

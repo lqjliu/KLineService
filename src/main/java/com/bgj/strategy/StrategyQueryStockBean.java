@@ -113,11 +113,11 @@ public class StrategyQueryStockBean implements Comparable<StrategyQueryStockBean
 	@Override
 	public int compareTo(StrategyQueryStockBean o) {
 		if (this.getLeijiPercentage() > o.getLeijiPercentage()) {
-			return 1;
+			return -1;
 		} else if (this.getLeijiPercentage() == o.getLeijiPercentage()) {
 			return 0;
 		} else {
-			return -1;
+			return 1;
 		}
 	}	
 	
