@@ -289,8 +289,7 @@ public class GpphbServlet extends HttpServlet {
 			// http://m.quote.eastmoney.com/stock,600162.shtml
 			// http://s.m.sohu.com/t/cn/001/300001.html
 			// http://m.hexun.com/stock.php?code=156
-			double leijiPercentage = MathUtil.formatDoubleWith2((bean
-					.getLatestSpj() - bean.getDqj()) / bean.getDqj() * 100);
+			double leijiPercentage = bean.getLeijiPercentage();
 
 			StringBuffer stockInfo = new StringBuffer();
 			stockInfo
