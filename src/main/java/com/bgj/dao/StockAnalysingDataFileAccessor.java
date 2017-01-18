@@ -2,7 +2,9 @@ package com.bgj.dao;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Calendar;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -95,6 +97,13 @@ public class StockAnalysingDataFileAccessor implements StockAnalysingAccessor {
 		}
 
 		assessLatestSPJ(result);
+//		Object[] arrays = result.toArray();
+//		Arrays.sort(arrays);
+		Collections.sort(result);
+//		result = new ArrayList<StrategyQueryStockBean>();
+//		for (int i = 0; i < arrays.length; i++) {
+//			result.add((StrategyQueryStockBean) arrays[i]);
+//		}
 		return result;
 	}
 

@@ -1,6 +1,8 @@
 package com.bgj.strategy;
 
-public class StrategyQueryStockBean {
+import com.bgj.util.MathUtil;
+
+public class StrategyQueryStockBean implements Comparable<StrategyQueryStockBean>{
 	private String stockId;
 
 	public String getStockId() {
@@ -101,4 +103,22 @@ public class StrategyQueryStockBean {
 	public void setLatestSpj(double latestSpj) {
 		this.latestSpj = latestSpj;
 	}
+
+	public double getLeijiPercentage() {
+		double leijiPercentage = MathUtil
+				.formatDoubleWith2((getLatestSpj() - getDqj()) / getDqj() * 100);
+		return leijiPercentage;
+	}
+
+	@Override
+	public int compareTo(StrategyQueryStockBean o) {
+		if (this.getLeijiPercentage() > o.getLeijiPercentage()) {
+			return 1;
+		} else if (this.getLeijiPercentage() == o.getLeijiPercentage()) {
+			return 0;
+		} else {
+			return -1;
+		}
+	}	
+	
 }
