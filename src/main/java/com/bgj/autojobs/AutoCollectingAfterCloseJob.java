@@ -130,9 +130,6 @@ public class AutoCollectingAfterCloseJob implements Job {
 		// }
 		// System.out.println("db_url = " + db_url);
 		// ConnectionPool.setDBURL(db_url);
-
-
-		ConnectionPool.setFULLDBURL(fulldbURL);
 		AutoCollectingAfterCloseJob job = new AutoCollectingAfterCloseJob();
 		job.collectStockDailyInfo();
 
