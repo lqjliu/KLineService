@@ -16,10 +16,16 @@ import com.common.db.ConnectionPool;
 public class MRZTDataAnalyst {
 	public static void analyse(Date date) throws KLineException {
 		String strategyName = "MRZT";
-		String day = DateUtil.formatDay15(date);
-		String sql = "SELECT * FROM stockdailyinfo WHERE zdf >= "
-				+ Constants.ZT_THRESHOLD + " AND highestPrice != lowestPrice and DATE like '" + day
-				+ "%' ORDER BY zdf DESC";
+		int newStockDays = 60;
+		String sql = "select b.* from "
+				+ " (select stockid, count(stockid) days from stockdailyinfo where DATE < '"
+				+ DateUtil.formatDay(date) + "' group by stockid)a,"
+				+ " (SELECT * FROM stockdailyinfo WHERE zdf >= "
+				+ Constants.ZT_THRESHOLD
+				+ " AND highestPrice != lowestPrice and DATE like '"
+				+ DateUtil.formatDay15(date) + "%' ORDER BY zdf DESC) b"
+				+ " where a.stockid = b.stockid and a.days > " + newStockDays;
+
 		System.out.println("sql = " + sql);
 		List<StockdailyinfoVO> list = GhlhDAO.list(sql,
 				"com.bgj.dao.StockdailyinfoVO");
@@ -39,7 +45,7 @@ public class MRZTDataAnalyst {
 			e.printStackTrace();
 		}
 
-//		 analyseMultipleDay();
+		// analyseMultipleDay();
 
 	}
 
