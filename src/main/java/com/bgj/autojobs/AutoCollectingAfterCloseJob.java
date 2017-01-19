@@ -53,25 +53,25 @@ public class AutoCollectingAfterCloseJob implements Job {
 			EventRecorder
 					.recordEvent(this.getClass(), "Finish to analyse MRZT");
 
-			EventRecorder.recordEvent(this.getClass(), "Start to analyse YZZT");
-			YZZTDataAnalyst.analyse(today);
-			EventRecorder
-					.recordEvent(this.getClass(), "Finish to analyse YZZT");
-
-			EventRecorder.recordEvent(this.getClass(), "Start to analyse LXXD");
-			LXXDDataAnalyst.analyse(today);
-			EventRecorder
-					.recordEvent(this.getClass(), "Finish to analyse LXXD");
-
-			EventRecorder.recordEvent(this.getClass(), "Start to analyse ZJXG");
-			ZJXGDataAnalyst.analyse(today);
-			EventRecorder
-					.recordEvent(this.getClass(), "Finish to analyse ZJXG");
-			EventRecorder.recordEvent(ManulAnalysisJob.class,
-					"Start to analyse QSG");
-			QSGDataAnalyst.analyse(today);
-			EventRecorder.recordEvent(ManulAnalysisJob.class,
-					"Finish to analyse QSG");
+//			EventRecorder.recordEvent(this.getClass(), "Start to analyse YZZT");
+//			YZZTDataAnalyst.analyse(today);
+//			EventRecorder
+//					.recordEvent(this.getClass(), "Finish to analyse YZZT");
+//
+//			EventRecorder.recordEvent(this.getClass(), "Start to analyse LXXD");
+//			LXXDDataAnalyst.analyse(today);
+//			EventRecorder
+//					.recordEvent(this.getClass(), "Finish to analyse LXXD");
+//
+//			EventRecorder.recordEvent(this.getClass(), "Start to analyse ZJXG");
+//			ZJXGDataAnalyst.analyse(today);
+//			EventRecorder
+//					.recordEvent(this.getClass(), "Finish to analyse ZJXG");
+//			EventRecorder.recordEvent(ManulAnalysisJob.class,
+//					"Start to analyse QSG");
+//			QSGDataAnalyst.analyse(today);
+//			EventRecorder.recordEvent(ManulAnalysisJob.class,
+//					"Finish to analyse QSG");
 
 			notification.setSuccessful(true);
 		} catch (KLineException e) {
@@ -131,9 +131,6 @@ public class AutoCollectingAfterCloseJob implements Job {
 		// System.out.println("db_url = " + db_url);
 		// ConnectionPool.setDBURL(db_url);
 
-		String fulldbURL = "jdbc:mysql://"
-				+ "56cbfc6c26210.sh.cdb.myqcloud.com"
-				+ ":6971/bgj?user=bgj&password=KLine123&useUnicode=true&characterEncoding=UTF-8";
 
 		ConnectionPool.setFULLDBURL(fulldbURL);
 		AutoCollectingAfterCloseJob job = new AutoCollectingAfterCloseJob();
