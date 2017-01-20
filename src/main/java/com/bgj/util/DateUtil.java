@@ -16,7 +16,12 @@ public class DateUtil {
 		return df.format(date);
 	}
 	
+	public static String formatDayWithHourAndMinute(Date date) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		return df.format(date);
+	}
 
+	
 	public static String formatDay15(Date date) {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd 15");
 		return df.format(date);
@@ -160,7 +165,7 @@ public class DateUtil {
 
 	public static void main(String[] args) {
 		 Date now = new Date();
-		 System.out.println(DateUtil.formatDay15(now));
+		 System.out.println(DateUtil.formatDayWithHourAndMinute(now));
 //		Date now = DateUtil.getDate(2014, 1, 14);
 //		System.out.println(DateUtil.getPreviousMarketOpenDay(now, 5));
 
