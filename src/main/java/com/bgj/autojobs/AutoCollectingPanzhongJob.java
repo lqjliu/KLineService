@@ -92,7 +92,7 @@ public class AutoCollectingPanzhongJob implements Job {
 		// System.exit(0);
 		// }
 		// System.out.println("db_url = " + db_url);
-		// ConnectionPool.setDBURL(db_url);
+		ConnectionPool.setDBURL("10.66.137.11");
 		AutoCollectingPanzhongJob job = new AutoCollectingPanzhongJob();
 		try {
 			job.execute(null);
