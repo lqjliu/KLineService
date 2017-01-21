@@ -95,7 +95,9 @@ public class AutoCollectingPanzhongJob implements Job {
 		ConnectionPool.setDBURL("10.66.137.11");
 		AutoCollectingPanzhongJob job = new AutoCollectingPanzhongJob();
 		try {
+			System.out.println("first time execute the job");
 			job.execute(null);
+			System.out.println("first time execute the job end");
 			
 		} catch (JobExecutionException e) {
 			// TODO Auto-generated catch block
@@ -103,7 +105,9 @@ public class AutoCollectingPanzhongJob implements Job {
 		}
 
 		try {
+			System.out.println("second time execute the job");
 			job.execute(null);
+			System.out.println("second time execute the job end");
 			
 		} catch (JobExecutionException e) {
 			// TODO Auto-generated catch block
@@ -113,7 +117,10 @@ public class AutoCollectingPanzhongJob implements Job {
 		
 		AutoCollectingAfterCloseJob job1 = new AutoCollectingAfterCloseJob();
 		try {
+			System.out.println("close job");
 			job1.execute(null);
+			System.out.println("close job is end");
+
 		} catch (JobExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
