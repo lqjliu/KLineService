@@ -37,6 +37,8 @@ public class AutoCollectingPanzhongJob implements Job {
 		}
 		EventRecorder.recordEvent(this.getClass(), "Start to collect data");
 		collectStockDailyInfo();
+		System.out.println("It finishes execution");
+		
 		EventRecorder.recordEvent(this.getClass(), "Finish to collect data");
 		logger.info("It took "
 				+ ((Calendar.getInstance().getTimeInMillis() - time) / 1000)
@@ -53,7 +55,6 @@ public class AutoCollectingPanzhongJob implements Job {
 	}
 
 	private void collectStockDailyInfo(Date now) {
-		//EventRecorder.recordEvent(this.getClass(), "开始收集收盘数据");
 		String today = DateUtil.formatDayWithHourAndMinute(now);
 		for (int i = 0; i < 5; i++) {
 			new DataCollector().collectDailyInfo(now, true);
@@ -65,9 +66,13 @@ public class AutoCollectingPanzhongJob implements Job {
 			
 			String value = GhlhDAO.selectSingleValue(sql);
 			int count = Integer.parseInt(value);
+			System.out.println("count = " + count);
+
 			if (count != 0) {
 				EventRecorder.recordEvent(this.getClass(), "第 " + (i + 1)
 						+ "收集成功");
+				System.out.println("execute successfully");
+
 				break;
 			} else {
 				if (i == 4) {
@@ -76,7 +81,7 @@ public class AutoCollectingPanzhongJob implements Job {
 				}
 			}
 		}
-		//EventRecorder.recordEvent(this.getClass(), "结束收集收盘数据");
+		System.out.println("execute successfully from the loop");
 	}
 
 	public static void main(String[] args) {
