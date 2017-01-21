@@ -56,8 +56,8 @@ public class AutoCollectingPanzhongJob implements Job {
 		EventRecorder.recordEvent(this.getClass(), "开始收集收盘数据");
 		String today = DateUtil.formatDayWithHourAndMinute(now);
 		for (int i = 0; i < 5; i++) {
-			new DataCollector().collectDailyInfo(now, false);
-			String sql = "SELECT COUNT(*) FROM stockdailyinfo WHERE "
+			new DataCollector().collectDailyInfo(now, true);
+			String sql = "SELECT COUNT(*) FROM stockdailyinfo_panzhong WHERE "
 					+ "(stockid = '000001' OR stockid = '600036' OR stockid = '000002') AND DATE LIKE '"
 					+ today + "%'";
 			String value = GhlhDAO.selectSingleValue(sql);
@@ -96,11 +96,29 @@ public class AutoCollectingPanzhongJob implements Job {
 		AutoCollectingPanzhongJob job = new AutoCollectingPanzhongJob();
 		try {
 			job.execute(null);
+			
 		} catch (JobExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
+		try {
+			job.execute(null);
+			
+		} catch (JobExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+		AutoCollectingAfterCloseJob job1 = new AutoCollectingAfterCloseJob();
+		try {
+			job1.execute(null);
+		} catch (JobExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }

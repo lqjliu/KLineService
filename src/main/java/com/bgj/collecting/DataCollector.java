@@ -18,8 +18,7 @@ public class DataCollector {
 
 	public void collectDailyInfo(Date now, boolean isPanzhong) {
 		if (isPanzhong) {
-			int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-			String table = "stockdailyinfo" + hour;
+			String table = "stockdailyinfo_panzhong";
 			StockdailyinfoVO.TABLE_NAME = table;
 		}
 		collectStocks(now, Constants.SH_MARKET_CODE);
