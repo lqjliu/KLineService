@@ -43,7 +43,10 @@ public class KLineServlet extends HttpServlet {
 		String stockPath = this.getServletConfig().getInitParameter(
 				"Stock_Info");
 		StrateFilePath.getInstance().setRootPath(stockPath);
+		logger.info("Kline start the QuartzJobs");
 		BgjAutoQuartzServer.getInstance().startJob();
+		logger.info("Kline start the QuartzJobs done");
+
 	}
 
 	private String readAll(InputStream in, String encoding) throws IOException {
