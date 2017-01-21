@@ -60,6 +60,9 @@ public class AutoCollectingPanzhongJob implements Job {
 			String sql = "SELECT COUNT(*) FROM stockdailyinfo_panzhong WHERE "
 					+ "(stockid = '000001' OR stockid = '600036' OR stockid = '000002') AND DATE LIKE '"
 					+ today + "%'";
+			
+			System.out.println("firt time is done, sql = " + sql);
+			
 			String value = GhlhDAO.selectSingleValue(sql);
 			int count = Integer.parseInt(value);
 			if (count != 0) {
@@ -77,7 +80,7 @@ public class AutoCollectingPanzhongJob implements Job {
 	}
 
 	public static void main(String[] args) {
-		long times = Calendar.getInstance().getTimeInMillis();
+		//long times = Calendar.getInstance().getTimeInMillis();
 		// ConnectionPool
 		// .setFULLDBURL("jdbc:mysql://583fc8005bba7.sh.cdb.myqcloud.com:7337/bgj?user=bgj&password=KLine123&useUnicode=true&characterEncoding=UTF-8");
 
