@@ -32,21 +32,21 @@ public class BgjAutoQuartzServer {
 	}
 
 	private BgjAutoQuartzServer() {
-		try {
-			scheduler = StdSchedulerFactory.getDefaultScheduler();
-			scheduleJob(15, 1, "AutoCollectingAfterCloseJob",
-					AutoCollectingAfterCloseJob.class);
-			for(int i=30; i < 59; i++){
-				scheduleJob(9, i, "AutoCollectingPanzhongJob" + i,
-						AutoCollectingPanzhongJob.class);
-			}
-			for(int i=0; i < 59; i++){
-				scheduleJob(10, i, "AutoCollectingPanzhongJob" + i,
-						AutoCollectingPanzhongJob.class);
-			}
-		} catch (SchedulerException ex) {
-			logger.error("Make auto trade scheduler throw: ", ex);
-		}
+//		try {
+//			scheduler = StdSchedulerFactory.getDefaultScheduler();
+//			scheduleJob(15, 1, "AutoCollectingAfterCloseJob",
+//					AutoCollectingAfterCloseJob.class);
+//			for(int i=30; i < 59; i++){
+//				scheduleJob(9, i, "AutoCollectingPanzhongJob" + i,
+//						AutoCollectingPanzhongJob.class);
+//			}
+//			for(int i=0; i < 59; i++){
+//				scheduleJob(10, i, "AutoCollectingPanzhongJob" + i,
+//						AutoCollectingPanzhongJob.class);
+//			}
+//		} catch (SchedulerException ex) {
+//			logger.error("Make auto trade scheduler throw: ", ex);
+//		}
 	}
 
 	public void startJob() {
