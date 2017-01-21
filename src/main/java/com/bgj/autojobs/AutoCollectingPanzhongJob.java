@@ -53,7 +53,7 @@ public class AutoCollectingPanzhongJob implements Job {
 	}
 
 	private void collectStockDailyInfo(Date now) {
-		EventRecorder.recordEvent(this.getClass(), "开始收集收盘数据");
+		//EventRecorder.recordEvent(this.getClass(), "开始收集收盘数据");
 		String today = DateUtil.formatDayWithHourAndMinute(now);
 		for (int i = 0; i < 5; i++) {
 			new DataCollector().collectDailyInfo(now, true);
@@ -73,7 +73,7 @@ public class AutoCollectingPanzhongJob implements Job {
 				}
 			}
 		}
-		EventRecorder.recordEvent(this.getClass(), "结束收集收盘数据");
+		//EventRecorder.recordEvent(this.getClass(), "结束收集收盘数据");
 	}
 
 	public static void main(String[] args) {
