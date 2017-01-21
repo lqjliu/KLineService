@@ -100,7 +100,7 @@ public class AutoCollectingPanzhongJob implements Job {
 		// System.exit(0);
 		// }
 		// System.out.println("db_url = " + db_url);
-		ConnectionPool.setDBURL("10.66.137.11");
+		//ConnectionPool.setDBURL("10.66.137.11");
 		AutoCollectingPanzhongJob job = new AutoCollectingPanzhongJob();
 		try {
 			System.out.println("first time execute the job");
@@ -114,7 +114,9 @@ public class AutoCollectingPanzhongJob implements Job {
 
 		try {
 			System.out.println("second time execute the job");
-			job.execute(null);
+			AutoCollectingPanzhongJob job2 = new AutoCollectingPanzhongJob();
+
+			job2.execute(null);
 			System.out.println("second time execute the job end");
 			
 		} catch (JobExecutionException e) {
