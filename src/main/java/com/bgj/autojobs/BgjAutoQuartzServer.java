@@ -51,8 +51,12 @@ public class BgjAutoQuartzServer {
 
 	public void startJob() {
 		try {
+			System.out.println("start the quartz job");
 			scheduler.start();
+			System.out.println("start the quartz job done");
+
 		} catch (SchedulerException ex) {
+			ex.printStackTrace();
 			logger.error("Start AutoJob throw: ", ex);
 		}
 	}
