@@ -36,8 +36,12 @@ public class BgjAutoQuartzServer {
 			scheduler = StdSchedulerFactory.getDefaultScheduler();
 			scheduleJob(15, 1, "AutoCollectingAfterCloseJob",
 					AutoCollectingAfterCloseJob.class);
-			for(int i=0; i < 50; i++){
-				scheduleJob(14, i, "AutoCollectingPanzhongJob" + i,
+			for(int i=30; i < 59; i++){
+				scheduleJob(9, i, "AutoCollectingPanzhongJob" + i,
+						AutoCollectingPanzhongJob.class);
+			}
+			for(int i=0; i < 59; i++){
+				scheduleJob(10, i, "AutoCollectingPanzhongJob" + i,
 						AutoCollectingPanzhongJob.class);
 			}
 		} catch (SchedulerException ex) {
