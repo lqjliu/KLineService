@@ -104,27 +104,27 @@ public class AutoCollectingPanzhongJob implements Job {
 			e.printStackTrace();
 		}
 
-		try {
-			System.out.println("second time execute the job");
-			job.execute(null);
-			System.out.println("second time execute the job end");
-			
-		} catch (JobExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		
-		AutoCollectingAfterCloseJob job1 = new AutoCollectingAfterCloseJob();
-		try {
-			System.out.println("close job");
-			job1.execute(null);
-			System.out.println("close job is end");
-
-		} catch (JobExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			System.out.println("second time execute the job");
+//			job.execute(null);
+//			System.out.println("second time execute the job end");
+//			
+//		} catch (JobExecutionException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//
+//		
+//		AutoCollectingAfterCloseJob job1 = new AutoCollectingAfterCloseJob();
+//		try {
+//			System.out.println("close job");
+//			job1.execute(null);
+//			System.out.println("close job is end");
+//
+//		} catch (JobExecutionException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 	}
 
