@@ -103,7 +103,7 @@ public class HistoryDataCollector {
 		String[] stockInfo = pattern.split(dailyStockInfo);
 		StockdailyinfoVO stockdailyinfoVO = new StockdailyinfoVO();
 		stockdailyinfoVO.setStockid(stockId);
-		stockdailyinfoVO.setDate(DateUtil.parseDay(stockInfo[0]));
+		stockdailyinfoVO.setDate(DateUtil.parseDayWithHH(stockInfo[0] + " 15"));
 		stockdailyinfoVO.setName(name);
 		stockdailyinfoVO.setTodayopenprice(Double.parseDouble(stockInfo[1]));
 		stockdailyinfoVO.setHighestprice(Double.parseDouble(stockInfo[2]));
@@ -159,19 +159,19 @@ public class HistoryDataCollector {
 //		String fulldbURL = "jdbc:mysql://"
 //				+ "56d1d27f1abfb.sh.cdb.myqcloud.com:4533"
 //				+ "/bgj?user=bgj&password=KLine123&useUnicode=true&characterEncoding=UTF-8";
-		String fulldbURL = "jdbc:mysql://"
-				+ "10.66.137.11:3306"
-				+ "/bgj?user=bgj&password=KLine123&useUnicode=true&characterEncoding=UTF-8";
-
-		ConnectionPool.setFULLDBURL(fulldbURL);
+//		String fulldbURL = "jdbc:mysql://"
+//				+ "10.66.137.11:3306"
+//				+ "/bgj?user=bgj&password=KLine123&useUnicode=true&characterEncoding=UTF-8";
+//
+//		ConnectionPool.setFULLDBURL(fulldbURL);
 		
 		
 		StockQuotesBean sqb = new StockQuotesBean();
 		sqb.setStockId("600036");
-		sqb.setName("��������");
+		sqb.setName("招商银行");
 		sqb.setCjl(5436800);
 		sqb.setHsl(2.64);
-		collectDailyInfo("20150414", "20150415", sqb);
+		collectDailyInfo("20160411", "20160414", sqb);
 	}
 
 	public static void main(String[] args) {

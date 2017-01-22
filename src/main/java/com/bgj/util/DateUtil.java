@@ -27,6 +27,17 @@ public class DateUtil {
 		return df.format(date);
 	}
 	
+	public static Date parseDayWithHH(String sDate) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH");
+		Date result = null;
+		try {
+			result = df.parse(sDate);
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+		return result;
+	}
+
 	
 
 	public static Date parseDay(String sDate) {
